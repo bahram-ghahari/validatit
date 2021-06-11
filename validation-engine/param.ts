@@ -66,6 +66,13 @@ export class JSONParam{
      */
     dynamicValidation?:(body:any)=>{success:boolean,error_message?:string};
 
+ 
+    /**
+     * List of parameters for the nested object
+     * **Important:type has to be either undefined of set to OBJECT
+     */
+    params?:JSONParam[]=[];
+
 
     /**
      * 
