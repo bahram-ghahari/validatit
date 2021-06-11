@@ -1,0 +1,39 @@
+{
+  "name": "validatit",
+  "version": "1.0.7",
+  "description": "A package that makes json validation easier",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "build": "tsc",
+    "test": "nyc --reporter=text mocha  -r ts-node/register  ./__test/**.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bahram-ghahari/json-validator.git"
+  },
+  "keywords": [
+    "json",
+    "validation",
+    "verification",
+    "regex"
+  ],
+  "author": "Bahram Ghahari",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bahram-ghahari/json-validator/issues"
+  },
+  "homepage": "https://github.com/bahram-ghahari/json-validator#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.18",
+    "@types/mocha": "^8.2.2",
+    "chai": "^4.3.4",
+    "mocha": "^9.0.0",
+    "nyc": "^15.1.0",
+    "ts-node": "^10.0.0",
+    "tslint": "^5.12.1",
+    "typescript": "^3.3.3",
+    "typings": "^0.6.10"
+  }
+}
