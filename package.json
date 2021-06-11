@@ -1,6 +1,6 @@
 {
   "name": "validatit",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A package that makes json validation easier",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bahram-ghahari/json-validator.git"
+    "url": "git+https://github.com/bahram-ghahari/validatit.git"
   },
   "keywords": [
     "json",
@@ -22,9 +22,9 @@
   "author": "Bahram Ghahari",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bahram-ghahari/json-validator/issues"
+    "url": "https://github.com/bahram-ghahari/validatit/issues"
   },
-  "homepage": "https://github.com/bahram-ghahari/json-validator#readme",
+  "homepage": "https://github.com/bahram-ghahari/validatit#readme",
   "devDependencies": {
     "@types/chai": "^4.2.18",
     "@types/mocha": "^8.2.2",
