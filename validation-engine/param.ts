@@ -68,6 +68,13 @@ export class JSONParam{
 
 
     /**
+     * List of parameters for the nested object
+     * **Important:type has to be either undefined of set to OBJECT
+     */
+    params?:JSONParam[]=[];
+
+
+    /**
      * 
      * @param {name} string name of the parameter
      * @param {type} string parameter type
