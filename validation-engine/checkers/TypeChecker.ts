@@ -1,5 +1,5 @@
 import { IChecker } from "./IChecker";
-import { JSONParam } from "../param";
+import { JSONParam } from "../JSONParam";
 import  { ARRAY, OBJECT, BOOLEAN, STRING, NUMBER, FUNCTION, DATE, CREDIT_CARD, EMAIL, PHONE, ANY }  from "../paramType";
 
 export class TypeChecker implements IChecker{

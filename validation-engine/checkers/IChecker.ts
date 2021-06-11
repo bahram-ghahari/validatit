@@ -1,4 +1,4 @@
-import { JSONParam } from "../param";
+import { JSONParam } from "../JSONParam";
 
 /**
  * Validation checker interface

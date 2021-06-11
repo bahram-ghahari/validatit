@@ -1,5 +1,5 @@
 import { IChecker } from "./IChecker";
-import { JSONParam } from "../param";
+import { JSONParam } from "../JSONParam";
 
 export class AvailabilityChecker implements IChecker{
     

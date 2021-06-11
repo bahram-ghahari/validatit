@@ -1,5 +1,5 @@
 
-import { JSONParam } from "./param"; 
+import { JSONParam } from "./JSONParam"; 
 import { paramErrorManager } from "./paramErrorManager"; 
 import { IChecker } from "./checkers/IChecker";
 import { RegexChecker } from "./checkers/RegexChecker";
