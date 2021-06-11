@@ -1,6 +1,7 @@
 import { IChecker } from "./IChecker";
 import { JSONParam } from "../JSONParam";
 import  { ARRAY, OBJECT, BOOLEAN, STRING, NUMBER, FUNCTION, DATE, CREDIT_CARD, EMAIL, PHONE, ANY }  from "../paramType";
+import { isObject } from "./types/object";
 
 export class TypeChecker implements IChecker{
     check(json_object:any,param:JSONParam):boolean{
@@ -21,19 +22,7 @@ export class TypeChecker implements IChecker{
                     type_ret = value.constructor == [].constructor;
                     break;
                 case OBJECT:
-                    const is_object = typeof value === 'object';
-                    if(is_object){
-                        if(value===null)
-                            type_ret=true;
-                        else{
-                            const is_array =value.constructor == [].constructor;
-                            type_ret = !is_array;
-                        }
-                    }
-                    else 
-                    {
-                        type_ret = false;
-                    }
+                    type_ret = isObject(value);
                     break;        
                 case BOOLEAN:
                     type_ret = typeof value === 'boolean';

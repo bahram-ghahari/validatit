@@ -7,6 +7,7 @@ import { TypeChecker } from "./checkers/TypeChecker";
 import { DynamicChecker } from "./checkers/DynamicChecker";
 import { MandatoryChecker } from "./checkers/MandatoryChecker";
 import { AvailabilityChecker } from "./checkers/AvailabilityChecker";
+import { ParamsChecker } from "./checkers/ParamsChecker";
 
 /**
  * 
@@ -28,6 +29,7 @@ export function validate(json_object:any , validation_params:JSONParam[]){
     const checkers:IChecker[]=[
         new RegexChecker(),
         new TypeChecker(),
+        new ParamsChecker(),
         new DynamicChecker()
     ];
     
@@ -65,11 +67,4 @@ export function validate(json_object:any , validation_params:JSONParam[]){
     }); 
     return {success:ret,params:errors.invalid_params};
 }
-
-function isMandatoryFieldAvailable(json_object:any , param:JSONParam){
-    return {
-        mandatory_and_available :  param.mandatory? json_object[param.name]!==undefined : true
-        ,
-        available: json_object[param.name]!==undefined
-    }
-}
+ 
