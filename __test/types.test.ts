@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import {isObject} from '../validation-engine/checkers/types/object'
+import { isCreditCard } from "../validation-engine/checkers/types/creditcard";
 describe("object",()=>{
     
     context("is_object()",()=>{
@@ -89,3 +90,68 @@ describe("object",()=>{
     });
 });
 
+describe("credit card",()=>{
+    
+    context("is_object()",()=>{
+ 
+        it("should return true when input is a credit card",()=>{
+            //arrage
+            const input = {
+                visa:{
+                    1:"4111111111111111",
+                    2:"4012888888881881"
+                },
+                master:{
+                    1:"5555555555554444",
+                    2:"5105105105105100",
+                    3:"2222630000001125"
+                },
+                amex:{
+                    1:"378282246310005",
+                    2:"371449635398431"
+                },
+            };
+            //act 
+            let res = isCreditCard(input.visa[1]);
+            //assert  
+            expect(res ,'visa 1 ').to.be.true;
+
+            //act 
+            res = isCreditCard(input.visa[2]);
+            //assert  
+            expect(res ,'visa 2').to.be.true;
+
+
+
+
+            //act 
+            res = isCreditCard(input.master[1]);
+            //assert  
+            expect(res ,'master 1').to.be.true;
+
+            //act 
+            res = isCreditCard(input.master[2]);
+            //assert  
+            expect(res ,'master 2').to.be.true;
+
+   
+
+
+                        
+            //act 
+            res = isCreditCard(input.amex[1]);
+            //assert  
+            expect(res ,'amex 1').to.be.true;
+
+            //act 
+            res = isCreditCard(input.amex[2]);
+            //assert  
+            expect(res ,'amex 2').to.be.true;
+ 
+  
+ 
+        }); 
+
+ 
+    });
+});

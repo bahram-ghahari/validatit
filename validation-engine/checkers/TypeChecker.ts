@@ -2,6 +2,8 @@ import { IChecker } from "./IChecker";
 import { JSONParam } from "../JSONParam";
 import  { ARRAY, OBJECT, BOOLEAN, STRING, NUMBER, FUNCTION, DATE, CREDIT_CARD, EMAIL, PHONE, ANY }  from "../paramType";
 import { isObject } from "./types/object";
+import { isNumber } from "./types/number";
+import { isCreditCard } from "./types/creditcard";
 
 export class TypeChecker implements IChecker{
     check(json_object:any,param:JSONParam):boolean{
@@ -13,8 +15,7 @@ export class TypeChecker implements IChecker{
         const value = json_object[param.name];
         const phone_regex = /^\+[1-9]\d{1,14}$/;
         const email_regex = /^[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
-        const cc_regex = /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/;
-    
+  
         let type_ret = true;
         if(param.type!==undefined){
             switch(param.type){
@@ -31,7 +32,7 @@ export class TypeChecker implements IChecker{
                     type_ret = typeof value === 'string';
                     break;
                 case NUMBER:
-                    type_ret = typeof value === 'number'; 
+                    type_ret = isNumber(value); 
                     break;
                 case FUNCTION:
                     type_ret = typeof value === 'function' ; 
@@ -42,7 +43,7 @@ export class TypeChecker implements IChecker{
                     type_ret = !isNaN(date_number);
                     break;
                 case CREDIT_CARD:
-                    type_ret = cc_regex.exec(value)!==null;
+                    type_ret = isCreditCard(value);
                     break;
                 case EMAIL:
                     type_ret = email_regex.exec(value)!==null;
