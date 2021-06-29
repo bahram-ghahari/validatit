@@ -231,7 +231,7 @@ describe("regexChecker",()=>{
            const param = {
                 mandatory:true,
                 name:"country",
-                regex:/((U|u)nited (S|s)tates)|((C|c)anada)/
+                pattern:/((U|u)nited (S|s)tates)|((C|c)anada)/
             };
 
             const body = {
@@ -248,7 +248,7 @@ describe("regexChecker",()=>{
             const param = {
                 mandatory:true,
                 name:"country",
-                regex:/((U|u)nited (S|s)tates)|((C|c)anada)/
+                pattern:/((U|u)nited (S|s)tates)|((C|c)anada)/
             };
 
             const body = {
@@ -267,10 +267,20 @@ describe("regexChecker",()=>{
             const param = {
                 name:"first_name"
             };
+            
             let err = checker.error(param); 
   
             //assert
             expect(err).to.equal("first_name is invalid.");
+
+            param["pattern_error_message"]="error!!!";
+            err = checker.error(param);  
+            expect(err).to.equal("error!!!");
+
+            param["pattern_error_message"] = "$param.$name no es válido o no se ha presentado."
+            err = checker.error(param);  
+            expect(err).to.equal("first_name no es válido o no se ha presentado.");
+ 
         });
     });
 

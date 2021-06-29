@@ -24,15 +24,15 @@ export class JSONParam{
      */
     name:string;
 
-    /**
+    /** 
      * Custom regular expression validator. 
      */
-    regex?:RegExp;
+    pattern?:RegExp;
 
     /**
      * Regex custom error message.
      */
-    regexErrorMessage?:string;
+    pattern_error_message?:string;
 
 
     /**
@@ -79,23 +79,23 @@ export class JSONParam{
      * @param {name} string name of the parameter
      * @param {type} string parameter type
      * @param {mandatory} boolean is it mandatory?
-     * @param {regex} RegExp custom regular expression
-     * @param {regexErrorMessage} string  custom regex message
+     * @param {pattern} RegExp custom regular expression
+     * @param {pattern_error_message} string  custom regex message
      * @param {dynamicValidation} function custom validation
      */
     constructor(
         name:string , 
         type?:string ,  
         mandatory?:boolean , 
-        regex?:RegExp , 
-        regexErrorMessage?:string , 
+        pattern?:RegExp , 
+        pattern_error_message?:string , 
         dynamicValidation?:(any)=>{success;boolean,error_message?:string})
     {
         this.name = name;
         this.mandatory = mandatory===null? false:mandatory; 
         this.type = type===null? ANY:type;
-        this.regex = regex===null? /./:regex; 
-        this.regexErrorMessage =regexErrorMessage===null?'Invalid parameter':regexErrorMessage;
+        this.pattern = pattern===null? /./:pattern; 
+        this.pattern_error_message =pattern_error_message===null?'Invalid parameter':pattern_error_message;
         this.dynamicValidation = dynamicValidation ===null? function (body:any) {return {success:true};}:dynamicValidation;
     }
 

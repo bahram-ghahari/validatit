@@ -10,20 +10,20 @@ export class RegexChecker implements IChecker{
 
 
         let regex_ret = true;
-        if(param.regex!==undefined){
+        if(param.pattern!==undefined){
             const value = json_object[param.name];
             if(value===undefined)return regex_ret=false;
             else{
                 const value_str:string = value.toString();
-                regex_ret = value_str.match(param.regex)!==null;
+                regex_ret = value_str.match(param.pattern)!==null;
             }
         }
         return regex_ret;
     }
     error(param:JSONParam){
-        const mandatory_param_error:string = "$param.$name is invalid.";
+        const param_error:string = param.pattern_error_message===undefined? "$param.$name is invalid." : param.pattern_error_message;
     
-        let error_message = mandatory_param_error.replace("$param.$name",param.name);
+        let error_message = param_error.replace("$param.$name",param.name);
         return error_message;
     }
     code:string;
