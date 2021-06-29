@@ -3,6 +3,7 @@ import { MandatoryChecker } from '../validation-engine/checkers/MandatoryChecker
 import { AvailabilityChecker } from '../validation-engine/checkers/AvailabilityChecker';
 import { RegexChecker } from '../validation-engine/checkers/RegexChecker';
 import { TypeChecker } from '../validation-engine/checkers/TypeChecker';
+import { ParamsChecker } from '../validation-engine/checkers/ParamsChecker';
 
 
 
@@ -42,8 +43,7 @@ describe("mandatoryChecker",()=>{
             expect(fn).to.throw('param is undefined');
         });
         it("Should return false when mandatory field not available",()=>{
-           param = {
-                mandatory:true,
+           param = { 
                 name:"notavail"
             };
             //act 
@@ -64,17 +64,9 @@ describe("mandatoryChecker",()=>{
             //assert
             expect(ret).to.be.true;
         });
-        it("Should return true when param.mandatory not defined",()=>{
-            param = { 
-                 name:"name"
-             };
-             //act 
-             //act 
-            let ret = checker.check(json_body,param); 
  
-            //assert
-            expect(ret).to.be.true;
-         });
+
+           
     });
     context("error()",()=>{
         it("should return error text",()=>{
@@ -182,9 +174,7 @@ describe("availabilityChecker",()=>{
         });
     });
 
-});
-
-
+}); 
 
 describe("regexChecker",()=>{
     const checker = new RegexChecker();
@@ -286,7 +276,151 @@ describe("regexChecker",()=>{
 
 });
 
+describe('paramsChecker',()=>{
 
+    const checker = new ParamsChecker();
+    context('check()',()=>{
+
+        it("Should return true when params is not null and is set to OBJECT",()=>{
+            let param = {
+                mandatory:true,
+                name:"friends",
+                type:"OBJECT",
+                params:[]
+            };
+
+            const body = {
+                name:"JAmes",
+                friends:{
+                    name:"jonny"
+                }
+            };  
+             //act 
+             let ret = checker.check(body,param); 
+  
+             //assert
+             expect(ret).to.be.true;
+
+
+             //arrange
+             param.type=undefined;
+             //act 
+             ret = checker.check(body,param);
+             //assert
+             expect(ret).to.be.true; 
+        });
+        it("Should return false when params is not null and is not set to OBJECT",()=>{ 
+            //arrange
+            let param = {
+                mandatory:true,
+                name:"name",
+                type:"STRING",
+                params:[
+                    {
+                        mandatory:true,
+                        name:"name"
+                    }
+                ]
+            };
+
+            const body = {
+                name:"James",
+                friends:{
+                    name:"jonny"
+                },
+                date_of_birth:"1/1/1980",
+                age:42,
+                phone:"+18883893300",
+                cars:["lambo","ford"]
+            };  
+             //act 
+             let ret = checker.check(body,param); 
+  
+             //assert
+             expect(ret,"param is defined but type is set to STRING").to.be.false;
+
+             //arrange
+             param.type="PHONE";
+             param.name = "phone"; 
+             //act 
+             ret = checker.check(body,param);  
+             //assert
+             expect(ret,"param is defined but type is set to PHONE").to.be.false;
+
+
+            //arrange
+            param.type="ARRAY";
+            param.name = "cars"; 
+            //act 
+            ret = checker.check(body,param);  
+            //assert
+            expect(ret,"param is defined but type is set to ARRAY").to.be.false;
+
+
+            //arrange
+            param.type="DATE";
+            param.name = "date_of_birth"; 
+            //act 
+            ret = checker.check(body,param);  
+            //assert
+            expect(ret,"param is defined but type is set to DATE").to.be.false;
+
+
+            //arrange
+            param.type="NUMBER";
+            param.name = "age"; 
+            //act 
+            ret = checker.check(body,param);  
+            //assert
+            expect(ret,"param is defined but type is set to NUMBER").to.be.false;
+
+
+        });
+        it("Should return true when params is null",()=>{ 
+            //arrange
+            let param = {
+                mandatory:true,
+                name:"name",
+                type:"STRING" 
+            };
+
+            const body = {
+                name:"James",
+                friends:{
+                    name:"jonny"
+                },
+                date_of_birth:"1/1/1980",
+                age:42,
+                phone:"+18883893300",
+                cars:["lambo","ford"]
+            };  
+             //act 
+             let ret = checker.check(body,param); 
+  
+             //assert
+             expect(ret,"param is not defined. it should disregard type and return true").to.be.true;
+
+        });
+
+    });
+    context("error()",()=>{
+        it("should return error text",()=>{
+            let param = {
+                name:"first_name",
+                type:"NUMBER"
+            };
+            let err = checker.error(param); 
+  
+            //assert
+            expect(err).to.equal("first_name is set to NUMBER but has validator for nested object. Make sure that type is set to OBJECT.");
+
+
+            param.type=undefined;
+            err = checker.error(param); 
+            expect(err).to.equal("first_name is set to undefined but has validator for nested object. Make sure that type is set to OBJECT.");
+        });
+    });
+});
 
 describe("typeChecker",()=>{
     const checker = new TypeChecker();
@@ -472,8 +606,6 @@ describe("typeChecker",()=>{
               expect(ret).to.be.true;
          });
 
-
-
          /**
          * PHONE 
          */
@@ -585,3 +717,4 @@ describe("typeChecker",()=>{
 
 });
 
+ 

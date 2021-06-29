@@ -5,6 +5,6 @@ export class paramError{
     error:ErrorInfo[]=[];
 }
 export class ErrorInfo{
-    error:string;
+    error_message:string;
     error_code?:string;
 }

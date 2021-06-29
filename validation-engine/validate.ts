@@ -1,5 +1,5 @@
 
-import { JSONParam } from "./param"; 
+import { JSONParam } from "./JSONParam"; 
 import { paramErrorManager } from "./paramErrorManager"; 
 import { IChecker } from "./checkers/IChecker";
 import { RegexChecker } from "./checkers/RegexChecker";
@@ -7,6 +7,26 @@ import { TypeChecker } from "./checkers/TypeChecker";
 import { DynamicChecker } from "./checkers/DynamicChecker";
 import { MandatoryChecker } from "./checkers/MandatoryChecker";
 import { AvailabilityChecker } from "./checkers/AvailabilityChecker";
+import { ParamsChecker } from "./checkers/ParamsChecker";
+import { ValidationResult } from "./ValidationResult";
+
+
+
+
+
+
+const mandatory_checker = new MandatoryChecker();
+const availability_checker = new AvailabilityChecker();
+//List of checkers to check. More checkers will be added in the future
+const checkers:IChecker[]=[
+    new RegexChecker(),
+    new TypeChecker(),
+    new ParamsChecker(),
+    new DynamicChecker()
+];
+
+
+
 
 /**
  * 
@@ -17,59 +37,80 @@ import { AvailabilityChecker } from "./checkers/AvailabilityChecker";
  * 
  * @see JSONParam object
  */
-export function validate(json_object:any , validation_params:JSONParam[]){
-
-    let ret = true; 
-    const errors= new paramErrorManager(); 
-    const mandatory_checker = new MandatoryChecker();
-    const availability_checker = new AvailabilityChecker();
-
-    //ist of checkers to check. More checkers will be added in the future
-    const checkers:IChecker[]=[
-        new RegexChecker(),
-        new TypeChecker(),
-        new DynamicChecker()
-    ];
-    
-    validation_params.forEach(p=>{
-
-        //check for mandatory fields. if not available, add  the field to error list
-
-        let field_is_mandatory = mandatory_checker.check(json_object,p);
-        let field_is_available = availability_checker.check(json_object,p); 
-
-
-        //if not available add field name to the list of errors
-        if(field_is_mandatory && !field_is_available){
-            errors.add(p.name, mandatory_checker.error(p));
-            ret = false;
-            return;
-        }
-
-
-        //is parameter available but not mandatory? if yes, check for the rest of the conditions 
-        if(field_is_available){
-
-
-            checkers.forEach(validator=>{
-                let validation_result = validator.check(json_object,p);
-                if(!validation_result){
-                    ret = false;
-                    errors.add(p.name , validator.error(p),validator.code);
-                }
-            });
-
-        }
-            
-        
-    }); 
-    return {success:ret,params:errors.invalid_params};
+export function validate(json_object:any , validation_params:JSONParam[]) { 
+    //check root
+    const result =  validatePath(json_object,validation_params,''); 
+    return result;
 }
+ 
+ 
+function  validatePath(json_object:any , validation_params:JSONParam[],path:string=""):ValidationResult{
 
-function isMandatoryFieldAvailable(json_object:any , param:JSONParam){
-    return {
-        mandatory_and_available :  param.mandatory? json_object[param.name]!==undefined : true
-        ,
-        available: json_object[param.name]!==undefined
+    
+    const result = new ValidationResult(); 
+    const errors= new paramErrorManager(); 
+
+
+    
+    for (let i = 0; i < validation_params.length; i++) {
+        const p = validation_params[i];
+
+
+        //validate each parameter
+        let field_check_result = validateField(json_object,p,path); 
+        result.Success = result.Success && field_check_result.Success;
+        field_check_result.Params.forEach(x=>errors.addParamError(x));
+        if(result.Success){
+            //validate childrens
+            if(p.params!==undefined){
+                //for example: address.[children_parameter]
+                path +=`${p.name}.`;
+                const internal_result = validatePath(json_object[`${p.name}`],p.params,path);
+                result.Success = result.Success && internal_result.Success; 
+                internal_result.Params.forEach(e=>errors.addParamError(e));
+            }
+        }
+
+    }  
+    result.Params = errors.invalid_params;   
+    return result;
+}
+function validateField(json_object:any, p:JSONParam,path:string):ValidationResult{
+
+    const errors= new paramErrorManager(); 
+    const result = new ValidationResult(); 
+    //check for mandatory fields. if not available, add  the field to error list 
+    const field_is_mandatory = mandatory_checker.check(json_object,p);
+    const field_is_available = availability_checker.check(json_object,p); 
+ 
+    
+    //if mandatory field is not available add field name to the list of errors
+    if(field_is_mandatory && !field_is_available){
+        errors.add(`${path}${p.name}`, mandatory_checker.error(p));
+        result.Success = false; 
     }
+
+
+
+    //is parameter available but not mandatory? if yes, check for the rest of the conditions 
+    
+    if(field_is_available){
+
+        //itirate though all checkers to find validation errors
+        for (let checker_i = 0; checker_i < checkers.length; checker_i++) {
+            const validator = checkers[checker_i];
+        
+            //check
+            let validation_result = validator.check(json_object,p);
+
+            //if unsuccessful, add errors to error list
+            if(!validation_result){
+                result.Success = false;
+                errors.add(`${path}${p.name}`, validator.error(p),validator.code);
+            }
+        }  
+    }  
+     
+    result.Params = errors.invalid_params; 
+    return result;
 }

@@ -1,13 +1,17 @@
-import { check } from "./index";
-import { STRING,NUMBER } from "./validation-engine/paramType";
+import { run } from "./index";
+import { STRING,NUMBER, CREDIT_CARD } from "./validation-engine/paramType";
 
 
-const validatit = check(
+const validatit = run(
     {
         name:"nam",
         age:13,
         from:100,
-        to:new Date("1/1/2020")
+        school:{
+            name:'Max Junior',
+            grade:11 
+        },
+        to:new Date("1/1/2020") 
     },
     [
         {
@@ -26,6 +30,11 @@ const validatit = check(
             type:"DATE"
         },
         {
+            name:"card",
+            mandatory:true , 
+            type:CREDIT_CARD
+        },
+        {
             name:"from",
             mandatory:true,
             dynamicValidation:function(body){ 
@@ -34,8 +43,27 @@ const validatit = check(
                 }else
                     return {success:false,error_message:"from should be smaller than to"};
             },
-            type:NUMBER
+            type:NUMBER 
+        },
+        {
+             name:"school",
+             mandatory:true,
+             params:[
+                 {
+                     name:"name",
+                     mandatory:true 
+                 },
+                 {
+                     name:"grade",
+                     mandatory:true
+                 },
+                 {
+                     name:"address",
+                     mandatory:true
+                 }
+             ]
         }
+          
     ]
 );
 
