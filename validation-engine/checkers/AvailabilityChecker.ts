@@ -10,9 +10,9 @@ export class AvailabilityChecker implements IChecker{
         return json_object[param.name]!==undefined;
     }
     error(param:JSONParam){
-        const mandatory_param_error:string = "$param.$name is not available.";
+        const required_param_error:string = "$param.$name is not available.";
     
-        let error_message = mandatory_param_error.replace("$param.$name",param.name);
+        let error_message = required_param_error.replace("$param.$name",param.name);
         return error_message;
     }
     code:string;

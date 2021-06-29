@@ -5,7 +5,7 @@ import { validate } from '../validation-engine/validate';
 
 
 
-describe("mandatoryChecker for a nested object",()=>{
+describe("requiredChecker for a nested object",()=>{
  
  
 
@@ -22,18 +22,18 @@ describe("mandatoryChecker for a nested object",()=>{
         let param:JSONParam[];  
 
  
-        it("Should return true when mandatory is enabled ",()=>{
+        it("Should return true when required is enabled ",()=>{
            param =  [{
                 name:"school",
-                mandatory:true , 
+                required:true , 
                 params:[
                     {
                         name:"name",
-                        mandatory:true
+                        required:true
                     },
                     {
                         name:"address",
-                        mandatory:true ,
+                        required:true ,
                         type:"STRING"
 
                     }
@@ -49,25 +49,25 @@ describe("mandatoryChecker for a nested object",()=>{
             //assert
             expect(ret.Success).to.be.true;
         });
-        it("Should validate children when parent is not mandatory but available ",()=>{
+        it("Should validate children when parent is not required but available ",()=>{
             param =  [{
                  name:"school",
-                 mandatory:false , 
+                 required:false , 
                  params:[
                      {
                          name:"name",
-                         mandatory:true
+                         required:true
                      },
                      {
                          name:"capacity",
-                         mandatory:true  
+                         required:true  
                      } 
                  ]
              }];
              //act 
              let ret = validate(json_body,param);  
              //assert
-             //capacity is mandatory but unavailable
+             //capacity is required but unavailable
              expect(ret.Success).to.be.false;
 
 
@@ -76,7 +76,7 @@ describe("mandatoryChecker for a nested object",()=>{
              json_body.school["capacity"]=1200;
              ret = validate(json_body,param);  
              //assert
-             //capacity is mandatory and available
+             //capacity is required and available
              expect(ret.Success).to.be.true;
          });
 
@@ -89,23 +89,23 @@ describe("mandatoryChecker for a nested object",()=>{
              };
             param =  [{
                  name:"school",
-                 mandatory:false , 
+                 required:false , 
                  params:[
                      {
                          name:"name",
-                         mandatory:true
+                         required:true
                      },
                      {
                          name:"capacity",
-                         mandatory:true  
+                         required:true  
                      },
                      {
                          name:"principal",
-                         mandatory:true,
+                         required:true,
                          params:[
                              {
                                  name:"last_name",
-                                 mandatory:true
+                                 required:true
                              }
                          ]
                      }
@@ -114,7 +114,7 @@ describe("mandatoryChecker for a nested object",()=>{
              //act 
              let ret = validate(json_body,param);  
              //assert
-             //school.principal.last_name is mandatory 
+             //school.principal.last_name is required 
              expect(ret.Success).to.be.true;
 
              json_body.school["principal"]["last_name"]=undefined;
@@ -124,7 +124,7 @@ describe("mandatoryChecker for a nested object",()=>{
              json_body.school["capacity"]=1200;
              ret = validate(json_body,param);  
              //assert
-             //school.principal.last_name is mandatory but undefined
+             //school.principal.last_name is required but undefined
              expect(ret.Success).to.be.false;
          });
     });

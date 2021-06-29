@@ -16,27 +16,27 @@ const validatit = run(
     [
         {
             name:"name",
-            mandatory:true , 
+            required:true , 
             type:STRING
         },
         {
             name:"age",
-            mandatory:true , 
+            required:true , 
             type:NUMBER
         },
         {
             name:"to",
-            mandatory:true,
+            required:true,
             type:"DATE"
         },
         {
             name:"card",
-            mandatory:true , 
+            required:true , 
             type:CREDIT_CARD
         },
         {
             name:"from",
-            mandatory:true,
+            required:true,
             dynamicValidation:function(body){ 
                 if(body.from< body.to){
                     return {success:true};
@@ -47,19 +47,19 @@ const validatit = run(
         },
         {
              name:"school",
-             mandatory:true,
+             required:true,
              params:[
                  {
                      name:"name",
-                     mandatory:true 
+                     required:true 
                  },
                  {
                      name:"grade",
-                     mandatory:true
+                     required:true
                  },
                  {
                      name:"address",
-                     mandatory:true
+                     required:true
                  }
              ]
         }

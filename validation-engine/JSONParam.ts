@@ -10,21 +10,29 @@ import { validate } from './validate';
 export class JSONParam{
 
     /**
-     * is this parameter mandatory?
-     */
-    mandatory?:boolean;
-
-    /**
      * parameter name. 
      * @example 
      * JSON_OBJECT = {
      *      success:true
      * }
-     * name = "success"
+     * param.name = "success"
      */
     name:string;
 
+
+
+
     /**
+     * is this parameter required?
+     */
+    required?:boolean;
+
+    /**
+     * custom error message for required field 
+    */
+   required_error_message?:string;
+
+    /** 
      * Custom regular expression validator. 
      */
     pattern?:RegExp;
@@ -55,7 +63,7 @@ export class JSONParam{
      * param = 
      * {
      *      name:'from',
-     *      mandatory:true,
+     *      required:true,
      *      dynamicValidation:function(body){
      *           if(body.from< body.to){
      *               return {success:true};
@@ -73,14 +81,13 @@ export class JSONParam{
      */
     params?:JSONParam[]=[];
 
- 
-
 
     /**
      * 
      * @param {name} string name of the parameter
      * @param {type} string parameter type
-     * @param {mandatory} boolean is it mandatory?
+     * @param {required} boolean is it required?
+     * @param {required_error_message} string  custom error message for required fields
      * @param {pattern} RegExp custom regular expression
      * @param {pattern_error_message} string  custom regex message
      * @param {dynamicValidation} function custom validation
@@ -88,16 +95,18 @@ export class JSONParam{
     constructor(
         name:string , 
         type?:string ,  
-        mandatory?:boolean , 
+        required?:boolean ,
+        required_error_message?:string, 
         pattern?:RegExp , 
         pattern_error_message?:string , 
         dynamicValidation?:(any)=>{success;boolean,error_message?:string})
     {
         this.name = name;
-        this.mandatory = mandatory===null? false:mandatory; 
+        this.required = required===null? false:required; 
         this.type = type===null? ANY:type;
-        this.pattern = pattern===null? /./:pattern; 
-        this.pattern_error_message =pattern_error_message===null?'Invalid parameter':pattern_error_message;
+        this.pattern = pattern===null? /./:pattern;  
+        this.pattern_error_message = pattern_error_message;
+        this.required_error_message=required_error_message;
         this.dynamicValidation = dynamicValidation ===null? function (body:any) {return {success:true};}:dynamicValidation;
     }
 

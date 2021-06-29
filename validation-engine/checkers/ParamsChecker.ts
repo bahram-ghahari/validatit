@@ -17,9 +17,9 @@ export class ParamsChecker implements IChecker{
         
     }
     error(param:JSONParam){
-        const mandatory_param_error:string = "$param.$name is set to $param.$type but has validator for nested object. Make sure that type is set to OBJECT.";
+        const required_param_error:string = "$param.$name is set to $param.$type but has validator for nested object. Make sure that type is set to OBJECT.";
     
-        let error_message = mandatory_param_error
+        let error_message = required_param_error
         .replace("$param.$name",param.name)
         .replace("$param.$type",param.type)
         ; 

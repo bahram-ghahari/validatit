@@ -5,7 +5,7 @@ import { IChecker } from "./checkers/IChecker";
 import { RegexChecker } from "./checkers/RegexChecker";
 import { TypeChecker } from "./checkers/TypeChecker";
 import { DynamicChecker } from "./checkers/DynamicChecker";
-import { MandatoryChecker } from "./checkers/MandatoryChecker";
+import { requiredChecker } from "./checkers/MandatoryChecker";
 import { AvailabilityChecker } from "./checkers/AvailabilityChecker";
 import { ParamsChecker } from "./checkers/ParamsChecker";
 import { ValidationResult } from "./ValidationResult";
@@ -15,7 +15,7 @@ import { ValidationResult } from "./ValidationResult";
 
 
 
-const mandatory_checker = new MandatoryChecker();
+const required_checker = new requiredChecker();
 const availability_checker = new AvailabilityChecker();
 //List of checkers to check. More checkers will be added in the future
 const checkers:IChecker[]=[
@@ -79,20 +79,20 @@ function validateField(json_object:any, p:JSONParam,path:string):ValidationResul
 
     const errors= new paramErrorManager(); 
     const result = new ValidationResult(); 
-    //check for mandatory fields. if not available, add  the field to error list 
-    const field_is_mandatory = mandatory_checker.check(json_object,p);
+    //check for required fields. if not available, add  the field to error list 
+    const field_is_required = required_checker.check(json_object,p);
     const field_is_available = availability_checker.check(json_object,p); 
  
     
-    //if mandatory field is not available add field name to the list of errors
-    if(field_is_mandatory && !field_is_available){
-        errors.add(`${path}${p.name}`, mandatory_checker.error(p));
+    //if required field is not available add field name to the list of errors
+    if(field_is_required && !field_is_available){
+        errors.add(`${path}${p.name}`, required_checker.error(p));
         result.Success = false; 
     }
 
 
 
-    //is parameter available but not mandatory? if yes, check for the rest of the conditions 
+    //is parameter available but not required? if yes, check for the rest of the conditions 
     
     if(field_is_available){
 

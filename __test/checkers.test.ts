@@ -1,5 +1,5 @@
 import {expect} from 'chai'; 
-import { MandatoryChecker } from '../validation-engine/checkers/MandatoryChecker';
+import { requiredChecker } from '../validation-engine/checkers/MandatoryChecker';
 import { AvailabilityChecker } from '../validation-engine/checkers/AvailabilityChecker';
 import { RegexChecker } from '../validation-engine/checkers/RegexChecker';
 import { TypeChecker } from '../validation-engine/checkers/TypeChecker';
@@ -8,8 +8,8 @@ import { ParamsChecker } from '../validation-engine/checkers/ParamsChecker';
 
 
 
-describe("mandatoryChecker",()=>{
-    const checker = new MandatoryChecker();
+describe("requiredChecker",()=>{
+    const checker = new requiredChecker();
    
  
  
@@ -42,7 +42,7 @@ describe("mandatoryChecker",()=>{
  
             expect(fn).to.throw('param is undefined');
         });
-        it("Should return false when mandatory field not available",()=>{
+        it("Should return false when required field not available",()=>{
            param = { 
                 name:"notavail"
             };
@@ -53,9 +53,9 @@ describe("mandatoryChecker",()=>{
             expect(ret).to.be.false;
         });
 
-        it("Should return true when mandatory field available",()=>{
+        it("Should return true when required field available",()=>{
            param = {
-                mandatory:true,
+                required:true,
                 name:"name"
             };
             //act 
@@ -76,10 +76,16 @@ describe("mandatoryChecker",()=>{
             let err = checker.error(param); 
   
             //assert
-            expect(err).to.equal("first_name is a mandatory field.");
+            expect(err).to.equal("first_name is a required field.");
+
+
+
+
+            param["required_error_message"] = "error!";
+            err = checker.error(param);  
+            expect(err).to.equal("error!");
         });
     });
-
 });
 
 
@@ -121,7 +127,7 @@ describe("availabilityChecker",()=>{
  
         it("Should return false when field is empty",()=>{
             param = {
-                 mandatory:true,
+                 required:true,
                  name:""
              };
              //act 
@@ -132,7 +138,7 @@ describe("availabilityChecker",()=>{
          });
         it("Should return true when field is available",()=>{
            param = {
-                mandatory:true,
+                required:true,
                 name:"name"
             };
             //act 
@@ -143,7 +149,7 @@ describe("availabilityChecker",()=>{
         });
         it("Should return false when field is not available",()=>{
             param = {
-                 mandatory:true,
+                 required:true,
                  name:"unavailable_name"
              };
              //act 
@@ -216,7 +222,7 @@ describe("regexChecker",()=>{
             //arrage
             const param = {
                 name:"name",
-                mandatory:true
+                required:true
             }
             //act 
             //assert
@@ -229,7 +235,7 @@ describe("regexChecker",()=>{
 
         it("Should return true when regular expression is valid",()=>{
            const param = {
-                mandatory:true,
+                required:true,
                 name:"country",
                 pattern:/((U|u)nited (S|s)tates)|((C|c)anada)/
             };
@@ -246,7 +252,7 @@ describe("regexChecker",()=>{
         });
         it("Should return false when regular expression is invalid",()=>{
             const param = {
-                mandatory:true,
+                required:true,
                 name:"country",
                 pattern:/((U|u)nited (S|s)tates)|((C|c)anada)/
             };
@@ -267,7 +273,7 @@ describe("regexChecker",()=>{
             const param = {
                 name:"first_name"
             };
-            
+
             let err = checker.error(param); 
   
             //assert
@@ -293,7 +299,7 @@ describe('paramsChecker',()=>{
 
         it("Should return true when params is not null and is set to OBJECT",()=>{
             let param = {
-                mandatory:true,
+                required:true,
                 name:"friends",
                 type:"OBJECT",
                 params:[]
@@ -322,12 +328,12 @@ describe('paramsChecker',()=>{
         it("Should return false when params is not null and is not set to OBJECT",()=>{ 
             //arrange
             let param = {
-                mandatory:true,
+                required:true,
                 name:"name",
                 type:"STRING",
                 params:[
                     {
-                        mandatory:true,
+                        required:true,
                         name:"name"
                     }
                 ]
@@ -389,7 +395,7 @@ describe('paramsChecker',()=>{
         it("Should return true when params is null",()=>{ 
             //arrange
             let param = {
-                mandatory:true,
+                required:true,
                 name:"name",
                 type:"STRING" 
             };
@@ -472,7 +478,7 @@ describe("typeChecker",()=>{
             //arrage
             const param = {
                 name:"name",
-                mandatory:true
+                required:true
             }
             //act 
             //assert
@@ -489,7 +495,7 @@ describe("typeChecker",()=>{
          */
         it("Should return true when type is number and is set to NUMBER",()=>{
            const param = {
-                mandatory:true,
+                required:true,
                 name:"age",
                 type:"NUMBER"
             };
@@ -507,7 +513,7 @@ describe("typeChecker",()=>{
         });
         it("Should return true when type is a decimal number and is set to NUMBER",()=>{
             const param = {
-                mandatory:true,
+                required:true,
                 name:"amount",
                 type:"NUMBER"
             };
@@ -524,7 +530,7 @@ describe("typeChecker",()=>{
         });
         it("Should return false when typtruee is null number and is set to NUMBER",()=>{
             const param = {
-                mandatory:true,
+                required:true,
                 name:"date",
                 type:"NUMBER"
             };
@@ -546,7 +552,7 @@ describe("typeChecker",()=>{
          */
         it("Should return true when type is an object and is set to OBJECT",()=>{
             const param = {
-                 mandatory:true,
+                 required:true,
                  name:"card",
                  type:"OBJECT"
              };
@@ -566,7 +572,7 @@ describe("typeChecker",()=>{
          });
          it("Should return false when type is an array and is set to OBJECT",()=>{
              const param = {
-                 mandatory:true,
+                 required:true,
                  name:"books",
                  type:"OBJECT"
              };
@@ -583,7 +589,7 @@ describe("typeChecker",()=>{
          });
          it("Should return false when type is a string and is set to OBJECT",()=>{
             const param = {
-                mandatory:true,
+                required:true,
                 name:"books",
                 type:"OBJECT"
             };
@@ -600,7 +606,7 @@ describe("typeChecker",()=>{
         });
          it("Should return true when type is null   and is set to OBJECT",()=>{
              const param = {
-                 mandatory:true,
+                 required:true,
                  name:"date",
                  type:"OBJECT"
              };
@@ -621,7 +627,7 @@ describe("typeChecker",()=>{
          */
         it("Should return true when type is a phone number and is set to PHONE",()=>{
             const param = {
-                 mandatory:true,
+                 required:true,
                  name:"phone",
                  type:"PHONE"
              };
@@ -662,7 +668,7 @@ describe("typeChecker",()=>{
 
          it("Should return true when type is an invalid phone number and is set to PHONE",()=>{
             const param = {
-                 mandatory:true,
+                 required:true,
                  name:"phone",
                  type:"PHONE"
              };
