@@ -66,7 +66,7 @@ export class TypeChecker implements IChecker{
     }
 
     error(param:JSONParam):string{
-        const param_type_error:string = "$param.$name has an invalid type.";
+        const param_type_error:string = param.type_error_message===undefined? "$param.$name has an invalid type." : param.type_error_message;
     
         let error_message = param_type_error.replace("$param.$name",param.name);
         return error_message;

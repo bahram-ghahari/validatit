@@ -51,6 +51,12 @@ export class JSONParam{
     type?:string;
 
     /**
+     * Custom error message for type errors.
+     */
+    type_error_message?:string;
+
+
+    /**
      * Custom function to validate.
      * 
      * @example
@@ -86,6 +92,7 @@ export class JSONParam{
      * 
      * @param {name} string name of the parameter
      * @param {type} string parameter type
+     * @param {type_error_message} string  custom message for type errors
      * @param {required} boolean is it required?
      * @param {required_error_message} string  custom error message for required fields
      * @param {pattern} RegExp custom regular expression
@@ -94,7 +101,8 @@ export class JSONParam{
      */
     constructor(
         name:string , 
-        type?:string ,  
+        type?:string , 
+        type_error_message?:string, 
         required?:boolean ,
         required_error_message?:string, 
         pattern?:RegExp , 
@@ -106,6 +114,7 @@ export class JSONParam{
         this.type = type===null? ANY:type;
         this.pattern = pattern===null? /./:pattern;  
         this.pattern_error_message = pattern_error_message;
+        this.type_error_message = type_error_message; 
         this.required_error_message=required_error_message;
         this.dynamicValidation = dynamicValidation ===null? function (body:any) {return {success:true};}:dynamicValidation;
     }
