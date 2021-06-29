@@ -7,6 +7,10 @@ const validatit = run(
         name:"nam",
         age:13,
         from:100,
+        school:{
+            name:'Max Junior',
+            grade:11 
+        },
         to:new Date("1/1/2020") 
     },
     [
@@ -39,8 +43,27 @@ const validatit = run(
                 }else
                     return {success:false,error_message:"from should be smaller than to"};
             },
-            type:NUMBER
+            type:NUMBER 
+        },
+        {
+             name:"school",
+             mandatory:true,
+             params:[
+                 {
+                     name:"name",
+                     mandatory:true 
+                 },
+                 {
+                     name:"grade",
+                     mandatory:true
+                 },
+                 {
+                     name:"address",
+                     mandatory:true
+                 }
+             ]
         }
+          
     ]
 );
 

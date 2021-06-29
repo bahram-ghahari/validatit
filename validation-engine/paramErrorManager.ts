@@ -27,7 +27,7 @@ export class paramErrorManager{
      * @param {error} string Custom error message
      * @param {code}  string An optional error code
      */
-    add(field:string, error:string,code?:string){
+    add(field:string, error:string,code?:string ){
         let field_exists = false;
         //itirate through invalid_params to find field name.
         this.invalid_params.forEach(ip=>{
@@ -36,7 +36,7 @@ export class paramErrorManager{
             {
                 field_exists=true;
                 ip.error.push({
-                    error:error,
+                    error_message:error,
                     error_code:code
                 });
             }
@@ -46,11 +46,22 @@ export class paramErrorManager{
             this.invalid_params.push({
                 name:field,
                 error:[{
-                    error:error,
+                    error_message:error,
                     error_code:code
                 }]
             });
         }
+    }
+
+    /**
+     * summary. Add ParamError into invalid_params
+     * @param p Generated ParamError 
+     * 
+     */
+    addParamError(p:paramError){
+        p.error.forEach(x=>{
+            this.add(p.name,x.error_message,x.error_code);
+        });
     }
 
 }     

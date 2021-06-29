@@ -7,7 +7,7 @@ export class MandatoryChecker implements IChecker{
         if(json_object===undefined)throw Error("json_object is undefined");
         if(param===undefined)throw Error("param is undefined"); 
 
-        return param.mandatory? json_object[param.name]!==undefined : true;
+        return param.mandatory===true ;
     }
     error(param:JSONParam){
         const mandatory_param_error:string = "$param.$name is a mandatory field.";

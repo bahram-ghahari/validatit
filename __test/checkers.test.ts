@@ -43,8 +43,7 @@ describe("mandatoryChecker",()=>{
             expect(fn).to.throw('param is undefined');
         });
         it("Should return false when mandatory field not available",()=>{
-           param = {
-                mandatory:true,
+           param = { 
                 name:"notavail"
             };
             //act 
@@ -65,17 +64,9 @@ describe("mandatoryChecker",()=>{
             //assert
             expect(ret).to.be.true;
         });
-        it("Should return true when param.mandatory not defined",()=>{
-            param = { 
-                 name:"name"
-             };
-             //act 
-             //act 
-            let ret = checker.check(json_body,param); 
  
-            //assert
-            expect(ret).to.be.true;
-         });
+
+           
     });
     context("error()",()=>{
         it("should return error text",()=>{
@@ -183,9 +174,7 @@ describe("availabilityChecker",()=>{
         });
     });
 
-});
-
-
+}); 
 
 describe("regexChecker",()=>{
     const checker = new RegexChecker();
@@ -728,3 +717,4 @@ describe("typeChecker",()=>{
 
 });
 
+ 
