@@ -1,10 +1,10 @@
 
 
-export class paramError{
+export interface paramError{
     name:string;
-    error:ErrorInfo[]=[];
+    error:ErrorInfo[];
 }
-export class ErrorInfo{
+export interface ErrorInfo{
     error_message:string;
     error_code?:string;
 }

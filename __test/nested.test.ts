@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import { JSONParam } from '../validation-engine/JSONParam';
 import { validate } from '../validation-engine/validate';
 
-
+import {validatit} from '../index'
 
 
 describe("requiredChecker for a nested object",()=>{
@@ -47,7 +47,7 @@ describe("requiredChecker for a nested object",()=>{
             let ret = validate(json_body,param); 
             
             //assert
-            expect(ret.Success).to.be.true;
+            expect(ret.success).to.be.true;
         });
         it("Should validate children when parent is not required but available ",()=>{
             param =  [{
@@ -68,7 +68,7 @@ describe("requiredChecker for a nested object",()=>{
              let ret = validate(json_body,param);  
              //assert
              //capacity is required but unavailable
-             expect(ret.Success).to.be.false;
+             expect(ret.success).to.be.false;
 
 
 
@@ -77,7 +77,7 @@ describe("requiredChecker for a nested object",()=>{
              ret = validate(json_body,param);  
              //assert
              //capacity is required and available
-             expect(ret.Success).to.be.true;
+             expect(ret.success).to.be.true;
          });
 
 
@@ -115,7 +115,7 @@ describe("requiredChecker for a nested object",()=>{
              let ret = validate(json_body,param);  
              //assert
              //school.principal.last_name is required 
-             expect(ret.Success).to.be.true;
+             expect(ret.success).to.be.true;
 
              json_body.school["principal"]["last_name"]=undefined;
 
@@ -125,8 +125,29 @@ describe("requiredChecker for a nested object",()=>{
              ret = validate(json_body,param);  
              //assert
              //school.principal.last_name is required but undefined
-             expect(ret.Success).to.be.false;
+             expect(ret.success).to.be.false;
          });
+
+
+
+         it("Should return only 1 error after multiple executions",()=>{
+ 
+           param =  [{
+                name:"city",
+                required: true 
+            }]; 
+            //act 
+            let ret = validatit(json_body,param);  
+            //assert
+            //school.principal.last_name is required 
+            expect(ret.error[0].error.length).to.eq(1);
+ 
+
+            ret = validatit(json_body,param);  
+            //assert
+            //school.principal.last_name is required 
+            expect(ret.error[0].error.length).to.eq(1);
+        });
     });
  
 

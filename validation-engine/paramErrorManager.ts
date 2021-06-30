@@ -19,6 +19,10 @@ export class paramErrorManager{
      * } 
      * ]
      */
+
+    constructor(){
+        this.invalid_params=[];
+    }
     invalid_params:paramError[]=[];
 
     /**
