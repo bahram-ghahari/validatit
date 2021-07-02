@@ -32,17 +32,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ValidationCard() {
-  const classes = useStyles(); 
-  const [JSON_object, setJsonObject] = React.useState({first_name:"mitch"});
+export default function ValidationCard(props) {
+  const classes = useStyles();  
   const handleJSONObjectChange = (obj) => { 
-    setJsonObject(obj.updated_src);
+    props.cb({json_object: obj.updated_src  , params:props.data.params});
   };
 
-
-  const [Params, setParam] = React.useState([{name:"first_name",required:true}]);
+ 
   const handleParamChange = (obj) => {
-    setParam(obj.updated_src);
+    props.cb({json_object: props.data.json_object  , params:obj.updated_src});
+
   };
 
 
@@ -53,7 +52,7 @@ export default function ValidationCard() {
 
   const validate = (event) => {  
     try{
-      const _result = validatit(JSON_object,Params);  
+      const _result = validatit(props.json_object,props.params);  
       setResult(_result);
     }catch{
       setResult({
@@ -71,7 +70,7 @@ export default function ValidationCard() {
               json object
             </Typography>
             <ReactJson 
-              src={JSON_object}
+              src={props.data.json_object}
               onDelete={handleJSONObjectChange} 
               onEdit={handleJSONObjectChange} 
               onAdd={handleJSONObjectChange} 
@@ -83,7 +82,7 @@ export default function ValidationCard() {
               params
             </Typography>
             <ReactJson 
-                src={Params}
+                src={props.data.params}
                 onDelete={handleParamChange} 
                 onEdit={handleParamChange} 
                 onAdd={handleParamChange} 

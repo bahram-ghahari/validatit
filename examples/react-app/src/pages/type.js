@@ -2,19 +2,14 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles'; 
 import Typography from '@material-ui/core/Typography'; 
 import ValidationCard from '../ValidationCard';
+import { pageClasses } from './classes';
+import { Divider } from '@material-ui/core';
 
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  }, 
-  groupTitle: {
-    background:"#416141",
-    color:"#fff",
-    paddingLeft:theme.spacing(1),
-    fontSize:"12px"
-  }
-}));
+
+const useStyles = makeStyles(pageClasses);
+
+
 
 export default function TypePage() {
   const classes = useStyles(); 
@@ -25,7 +20,7 @@ export default function TypePage() {
         <Typography  className={classes.groupTitle}>
             Type
         </Typography>
-        <ValidationCard />
+        <Divider /> 
     </div>
   );
 }

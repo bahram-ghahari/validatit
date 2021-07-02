@@ -74,6 +74,7 @@ const useStyles = makeStyles((theme) => ({
       duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: -drawerWidth,
+    paddingTop: theme.spacing(10)
   },
   contentShift: {
     transition: theme.transitions.create('margin', {
@@ -100,6 +101,13 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
+  const pages =[
+    {text:"Required" , id:"required" },
+    {text:"Type" , id:"type" },
+    {text:"Pattern" , id:"pattern" },
+    {text:"Function" , id:"function" }
+
+  ];
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -141,9 +149,10 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {
-          [ 'Required' , 'Type', 'Pattern', 'Function' ].map((text, index) => (
-            <ListItem button key={text} onClick={()=>console.log(text)}> 
-              <ListItemText primary={text} />
+          //[ 'Required' , 'Type', 'Pattern', 'Function' ]
+          pages.map((p, index) => (
+            <ListItem button key={p.text} onClick={()=>{document.getElementById(p.id).scrollIntoView({behavior: 'smooth'});}} > 
+              <ListItemText primary={p.text} />
             </ListItem>
           ))}
         </List>
@@ -156,10 +165,11 @@ export default function PersistentDrawerLeft() {
           [classes.contentShift]: open,
         })}
       > 
-        <RequiredPage />
-        <TypePage />
-        <PatternPage />
-        <FunctionPage />
+        <div id="required"><RequiredPage /></div>
+        <div id="type"><TypePage /></div>
+        <div id="pattern"><PatternPage /></div> 
+        <div id="function"><FunctionPage /></div>
+ 
       </main>
     </div>
   );
