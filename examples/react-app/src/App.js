@@ -1,116 +1,166 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid'; 
+import clsx from 'clsx';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Toolbar from '@material-ui/core/Toolbar'
-import Button from '@material-ui/core/Button';
-import {validatit} from 'validatit'
-// import the react-json-view component
-import ReactJson from 'react-json-view'
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ListItem from '@material-ui/core/ListItem';
+ 
+import RequiredPage from './pages/required';
+import TypePage from './pages/type';
+import FunctionPage from './pages/function';
+import PatternPage from './pages/pattern';
+import { ListItemText } from '@material-ui/core';
 
+
+const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: 'flex',
+  },
+  appBar: {
+      background:"#252525",
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+
+    }),
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+    background:"#252525",
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  hide: {
+    display: 'none',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  drawerHeader: {
+    background:'#252525',
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  },
+  content: {
     flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
   },
-  paper: {
-    padding: theme.spacing(2), 
-    color: theme.palette.text.secondary,
-    background:"#000000d9",
-    marginTop: theme.spacing(10)
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
   },
-  title: {
-    background:"#000000d9"
-  },
-  groupTitle: {
-    background:"#416141",
-    color:"#fff",
-    paddingLeft:theme.spacing(1),
-    fontSize:"12px"
+  drawerIconClose:{
+    color:"#fff"
   }
 }));
 
-export default function App() {
-  const classes = useStyles(); 
-  const [JSON_object, setJsonObject] = React.useState({first_name:"mitch"});
-  const handleJSONObjectChange = (obj) => { 
-    setJsonObject(obj.updated_src);
+export default function PersistentDrawerLeft() {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
 
-
-  const [Params, setParam] = React.useState([{name:"first_name",required:true}]);
-  const handleParamChange = (obj) => {
-    setParam(obj.updated_src);
+  const handleDrawerClose = () => {
+    setOpen(false);
   };
 
-
-
-  const [result, setResult] = React.useState({});
-
-
-
-  const validate = (event) => {  
-    try{
-      const _result = validatit(JSON_object,Params);  
-      setResult(_result);
-    }catch{
-      setResult({
-        success:false
-      });
-    }
-  };
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.title}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open,
+        })}
+      >
         <Toolbar>
-
-          <Typography variant="h4">
-            [valdatit]
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, open && classes.hide)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h4" noWrap>
+            [validat!t]
           </Typography>
-
         </Toolbar>
       </AppBar>
-
-      <Paper className={classes.paper}>
-        <Grid container  spacing={3}>
-         
-          <Grid item xs={6} alignContent="left">
-            <Typography  className={classes.groupTitle}>
-              json object
-            </Typography>
-            <ReactJson 
-              src={JSON_object}
-              onDelete={handleJSONObjectChange} 
-              onEdit={handleJSONObjectChange} 
-              onAdd={handleJSONObjectChange} 
-              theme="monokai" 
-            />
-          </Grid>
-          <Grid item xs={6} alignContent="left">
-            <Typography  className={classes.groupTitle}>
-              params
-            </Typography>
-            <ReactJson 
-                src={Params}
-                onDelete={handleParamChange} 
-                onEdit={handleParamChange} 
-                onAdd={handleParamChange} 
-                theme="monokai" 
-              />
-          </Grid>
-          <Grid item xs={12}>
-            <Button variant="contained" color="primary" onClick={validate} >Check</Button>
-          </Grid> 
-          <Grid item xs={12}>
-          <ReactJson 
-              src={result}  
-              theme="flat"
-            />
-          </Grid> 
-        </Grid>
-      </Paper>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <div className={classes.drawerHeader}>
+          <IconButton className={classes.drawerIconClose} onClick={handleDrawerClose}>
+            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          {
+          [ 'Required' , 'Type', 'Pattern', 'Function' ].map((text, index) => (
+            <ListItem button key={text} onClick={()=>console.log(text)}> 
+              <ListItemText primary={text} />
+            </ListItem>
+          ))}
+        </List>
+        <Divider />
+        <List> 
+        </List>
+      </Drawer>
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open,
+        })}
+      > 
+        <RequiredPage />
+        <TypePage />
+        <PatternPage />
+        <FunctionPage />
+      </main>
     </div>
   );
 }
