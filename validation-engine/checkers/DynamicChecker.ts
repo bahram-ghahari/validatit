@@ -14,8 +14,12 @@ export class DynamicChecker implements IChecker{
         }
         return success;
     }
-    error(param:JSONParam){ 
-        return this.error_message;
+    error(param:JSONParam,value:any){ 
+        return  this.error_message
+        .replace("$param.$name",param.name)
+        .replace("$param.$value",value)
+        
+        ;
     }
     code:string;
 

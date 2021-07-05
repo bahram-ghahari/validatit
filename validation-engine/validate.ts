@@ -28,7 +28,7 @@ import { ValidationResult } from "./ValidationResult";
  * @see JSONParam object
  */
 export function validate(json_object:any , validation_params:JSONParam[]) { 
- 
+   
     //check root
     const result = validatePath(json_object,validation_params,'');  
  
@@ -44,23 +44,21 @@ function  validatePath(json_object:any , validation_params:JSONParam[],path:stri
         error:[]
     }
     const errors:paramErrorManager = new paramErrorManager(); 
-
-
-    
+ 
     for (let i = 0; i < validation_params.length; i++) {
         const p = validation_params[i];
 
 
-        //validate each parameter
-
+        //validate each parameter 
         let field_check_result = validateField(json_object,p,path);  
          
         field_check_result.error.forEach(err=>errors.addParamError(err));
         result.success = result.success && field_check_result.success; 
+ 
 
         if(result.success){
             //validate childrens
-            if(p.params!==undefined){ 
+            if(p.params!==undefined && json_object[p.name]!==undefined){  
                 
                 //for example: address.[children_parameter]
                 path +=`${p.name}.`;
@@ -102,7 +100,7 @@ function validateField(json_object:any, p:JSONParam,path:string):ValidationResul
     
     //if required field is not available add field name to the list of errors
     if(field_is_required && !field_is_available){
-        errors.add(`${path}${p.name}`, required_checker.error(p));
+        errors.add(`${path}${p.name}`, required_checker.error(p ,json_object[p.name]));
         result.success = false; 
     }
 
@@ -122,7 +120,7 @@ function validateField(json_object:any, p:JSONParam,path:string):ValidationResul
             //if unsuccessful, add errors to error list
             if(!validation_result){
                 result.success = false;
-                errors.add(`${path}${p.name}`, validator.error(p),validator.code);
+                errors.add(`${path}${p.name}`, validator.error(p,json_object[p.name]),validator.code);
             }
         }  
     }  

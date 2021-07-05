@@ -130,6 +130,77 @@ describe("requiredChecker for a nested object",()=>{
 
 
 
+         it("Should validate if parent object is not required",()=>{
+            let json_object= 
+            {
+                first_name:"zig",
+                last_name:"zag",
+                address:{
+                    street:"1 yonge st",
+                    city:"toronto",
+                    province:"on"
+                }
+            } ;
+            let params= 
+            [
+                {
+                    name:"first_name",
+                    required:true
+                },
+                {
+                    name:"last_name",
+                    required:true
+                },
+                {
+                    name:"address",
+                    params:[
+                        {
+                            name:"street",
+                            required:true
+                        },
+                        {
+                            name:"city",
+                            required:true
+                        },
+                        {
+                            name:"province",
+                            required:true
+                        }
+
+                    ]
+                } 
+            ];
+            //act 
+            let ret = validate(json_object,params);  
+            //assert
+            //all fields are provided 
+            expect(ret.success).to.be.true;
+
+
+
+            let json_object2= 
+            {
+                first_name:"zig",
+                last_name:"zag",
+                address:{ 
+                    city:"toronto",
+                    province:"on"
+                }
+            } ;
+ 
+            ret = validate(json_object2,params);  
+            //assert
+            //address.street is required but undefined
+            expect(ret.success).to.be.false;
+
+            json_object.address=undefined;
+ 
+            ret = validate(json_object,params);  
+            //assert
+            //address children are required but address itself is undefined
+            expect(ret.success).to.be.true;
+        });
+
          it("Should return only 1 error after multiple executions",()=>{
  
            param =  [{

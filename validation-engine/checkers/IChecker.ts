@@ -15,7 +15,7 @@ export interface IChecker{
      * Summary. Provide custom errr message for failed validations
      * @param {param} JSONParam parameter validator 
      */
-    error(param:JSONParam):string;
+    error(param:JSONParam,value:any):string;
     /**
      * custom error code.
      */

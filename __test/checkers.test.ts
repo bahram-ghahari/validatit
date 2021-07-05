@@ -73,7 +73,7 @@ describe("requiredChecker",()=>{
             let param = {
                 name:"first_name"
             };
-            let err = checker.error(param); 
+            let err = checker.error(param , ''); 
   
             //assert
             expect(err).to.equal("first_name is a required field.");
@@ -81,8 +81,16 @@ describe("requiredChecker",()=>{
 
 
 
+            param["required_error_message"] = "$param.$value is outside of our covered area!";
+            err = checker.error(param , 'England');  
+            expect(err).to.equal("England is outside of our covered area!");
+
+
+
+
+
             param["required_error_message"] = "error!";
-            err = checker.error(param);  
+            err = checker.error(param , '');  
             expect(err).to.equal("error!");
         });
     });
@@ -131,10 +139,11 @@ describe("availabilityChecker",()=>{
                  name:""
              };
              //act 
-             let ret = checker.check(json_body,param); 
-  
-             //assert
-             expect(ret).to.be.false;
+             let fn = ()=>{
+                checker.check(json_body,param);
+            }
+ 
+            expect(fn).to.throw('name is undefined');
          });
         it("Should return true when field is available",()=>{
            param = {
@@ -164,7 +173,7 @@ describe("availabilityChecker",()=>{
             let param = {
                 name:"first_name"
             };
-            let err = checker.error(param); 
+            let err = checker.error(param,''); 
   
             //assert
             expect(err).to.equal("first_name is not available.");
@@ -173,7 +182,7 @@ describe("availabilityChecker",()=>{
             let param = {
                 name:""
             };
-            let err = checker.error(param); 
+            let err = checker.error(param,''); 
   
             //assert
             expect(err).to.equal(" is not available.");
@@ -274,18 +283,23 @@ describe("regexChecker",()=>{
                 name:"first_name"
             };
 
-            let err = checker.error(param); 
+            let err = checker.error(param,''); 
   
             //assert
             expect(err).to.equal("first_name is invalid.");
 
             param["pattern_error_message"]="error!!!";
-            err = checker.error(param);  
+            err = checker.error(param,'');  
             expect(err).to.equal("error!!!");
 
             param["pattern_error_message"] = "$param.$name no es válido o no se ha presentado."
-            err = checker.error(param);  
+            err = checker.error(param,'');  
             expect(err).to.equal("first_name no es válido o no se ha presentado.");
+
+
+            param["pattern_error_message"] = "$param.$value no es válido o no se ha presentado."
+            err = checker.error(param,'Mark');  
+            expect(err).to.equal("Mark no es válido o no se ha presentado.");
  
         });
     });
@@ -425,14 +439,14 @@ describe('paramsChecker',()=>{
                 name:"first_name",
                 type:"NUMBER"
             };
-            let err = checker.error(param); 
+            let err = checker.error(param,''); 
   
             //assert
             expect(err).to.equal("first_name is set to NUMBER but has validator for nested object. Make sure that type is set to OBJECT.");
 
 
             param.type=undefined;
-            err = checker.error(param); 
+            err = checker.error(param,''); 
             expect(err).to.equal("first_name is set to undefined but has validator for nested object. Make sure that type is set to OBJECT.");
         });
     });
@@ -724,7 +738,7 @@ describe("typeChecker",()=>{
                 name:"first_name",
                 type:"NUMBER"
             };
-            let err = checker.error(param); 
+            let err = checker.error(param,''); 
   
             //assert
             expect(err).to.equal("first_name has an invalid type.");

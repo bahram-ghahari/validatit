@@ -6,6 +6,8 @@ export class ParamsChecker implements IChecker{
     check(json_object:any, param:JSONParam):boolean{
         if(json_object===undefined)throw Error("json_object is undefined");
         if(param===undefined)throw Error("param is undefined"); 
+        if(param.name===undefined || param.name.trim() ==='')throw Error("name is undefined"); 
+
 
         //params has value! make sure that type is either undefined or set to OBJECT
         if(param.params!==undefined){
@@ -16,13 +18,15 @@ export class ParamsChecker implements IChecker{
         }
         
     }
-    error(param:JSONParam){
+    error(param:JSONParam,value:any){
         const required_param_error:string = "$param.$name is set to $param.$type but has validator for nested object. Make sure that type is set to OBJECT.";
     
         let error_message = required_param_error
         .replace("$param.$name",param.name)
         .replace("$param.$type",param.type)
-        ; 
+        .replace("$param.$value",value)
+
+        ;  
         
         return error_message;
     }

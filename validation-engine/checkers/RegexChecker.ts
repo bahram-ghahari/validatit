@@ -6,6 +6,7 @@ export class RegexChecker implements IChecker{
     check(json_object:any, param:JSONParam):boolean{
         if(json_object===undefined)throw Error("json_object is undefined");
         if(param===undefined)throw Error("param is undefined"); 
+        if(param.name===undefined || param.name.trim() ==='')throw Error("name is undefined"); 
 
 
 
@@ -20,10 +21,13 @@ export class RegexChecker implements IChecker{
         }
         return regex_ret;
     }
-    error(param:JSONParam){
+    error(param:JSONParam,value:any){
         const param_error:string = param.pattern_error_message===undefined? "$param.$name is invalid." : param.pattern_error_message;
     
-        let error_message = param_error.replace("$param.$name",param.name);
+        let error_message = param_error
+        .replace("$param.$name",param.name)
+        .replace("$param.$value",value)
+        ;
         return error_message;
     }
     code:string;

@@ -10,6 +10,7 @@ export class TypeChecker implements IChecker{
 
         if(json_object===undefined)throw Error("json_object is undefined");
         if(param===undefined)throw Error("param is undefined"); 
+        if(param.name===undefined || param.name.trim() ==='')throw Error("name is undefined"); 
 
 
         const value = json_object[param.name];
@@ -65,10 +66,13 @@ export class TypeChecker implements IChecker{
     
     }
 
-    error(param:JSONParam):string{
+    error(param:JSONParam,value:any):string{
         const param_type_error:string = param.type_error_message===undefined? "$param.$name has an invalid type." : param.type_error_message;
     
-        let error_message = param_type_error.replace("$param.$name",param.name);
+        let error_message = param_type_error
+        .replace("$param.$name",param.name)
+        .replace("$param.$value",value)
+        ;
         return error_message;
     }
     code:string;
