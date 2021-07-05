@@ -1,5 +1,4 @@
-import {ANY} from './paramType' 
-import { validate } from './validate';
+import {ANY} from './paramType'  
 
 
 
@@ -78,7 +77,7 @@ export class JSONParam{
      *      }
      * }
      */
-    dynamicValidation?:(body:any)=>{success:boolean,error_message?:string};
+    dynamicValidation?:(body:any)=>Promise<dynamicValidationResult>;
 
  
     /**
@@ -107,7 +106,7 @@ export class JSONParam{
         required_error_message?:string, 
         pattern?:RegExp , 
         pattern_error_message?:string , 
-        dynamicValidation?:(any)=>{success;boolean,error_message?:string})
+        dynamicValidation?:(any)=>Promise<dynamicValidationResult>)
     {
         this.name = name;
         this.required = required===null? false:required; 
@@ -116,10 +115,23 @@ export class JSONParam{
         this.pattern_error_message = pattern_error_message;
         this.type_error_message = type_error_message; 
         this.required_error_message=required_error_message;
-        this.dynamicValidation = dynamicValidation ===null? function (body:any) {return {success:true};}:dynamicValidation;
+        this.dynamicValidation = dynamicValidation ===null? 
+        
+            async (body) => {
+                let res:dynamicValidationResult={success:true,error_message:""};
+                return res;
+            }
+            :
+            dynamicValidation;
     }
 
 
 
 
+}
+
+
+export interface dynamicValidationResult{
+    success:boolean;
+    error_message?:string;
 }

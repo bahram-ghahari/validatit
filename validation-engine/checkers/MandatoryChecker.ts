@@ -4,7 +4,7 @@ import { ParamsChecker } from "./ParamsChecker";
 
 export class requiredChecker implements IChecker{
     
-    check(json_object:any, param:JSONParam):boolean{
+    async check(json_object:any, param:JSONParam):Promise<boolean>{
         if(json_object===undefined)throw Error("json_object is undefined");
         if(param===undefined)throw Error("param is undefined"); 
         if(param.name===undefined || param.name.trim() ==='')throw Error("name is undefined"); 

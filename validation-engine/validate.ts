@@ -108,8 +108,8 @@ async function validateField(json_object:any, p:JSONParam,path:string):Promise <
 
     
     //check for required fields. if not available, add  the field to error list 
-    const field_is_required = required_checker.check(json_object,p);
-    const field_is_available = availability_checker.check(json_object,p); 
+    const field_is_required = await required_checker.check(json_object,p);
+    const field_is_available = await availability_checker.check(json_object,p); 
  
     
     //if required field is not available add field name to the list of errors
@@ -129,8 +129,8 @@ async function validateField(json_object:any, p:JSONParam,path:string):Promise <
             const validator = checkers[checker_i];
         
             //check
-            let validation_result = validator.check(json_object,p);
-
+            let validation_result = await validator.check(json_object,p);
+ 
             //if unsuccessful, add errors to error list
             if(!validation_result){
                 result.success = false;

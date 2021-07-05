@@ -4,11 +4,13 @@ import { JSONParam } from "../JSONParam";
 export class DynamicChecker implements IChecker{
     
     error_message:string;
-    check(json_object:any, param:JSONParam):boolean{
+    async check(json_object:any, param:JSONParam):Promise<boolean>{
 
-        let success = true;
+        let success = true; 
+        
         if(param.dynamicValidation!==undefined){
-            let res = param.dynamicValidation(json_object);
+            let res = await param.dynamicValidation(json_object); 
+            
             success = res.success;
             this.error_message=res.error_message;
         }

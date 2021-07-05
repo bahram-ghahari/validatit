@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/chai": "^4.2.19",
     "@types/mocha": "^8.2.2",
+    "axios": "^0.21.1",
     "chai": "^4.3.4",
     "mocha": "^9.0.0",
     "nyc": "^15.1.0",
@@ -35,5 +36,5 @@
     "tslint": "^5.12.1",
     "typescript": "^3.3.3",
     "typings": "^0.6.10"
-  } 
+  }
 }

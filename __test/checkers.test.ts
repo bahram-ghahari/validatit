@@ -4,62 +4,75 @@ import { AvailabilityChecker } from '../validation-engine/checkers/AvailabilityC
 import { RegexChecker } from '../validation-engine/checkers/RegexChecker';
 import { TypeChecker } from '../validation-engine/checkers/TypeChecker';
 import { ParamsChecker } from '../validation-engine/checkers/ParamsChecker';
+import { DynamicChecker } from '../validation-engine/checkers/DynamicChecker';
+
+const expectThrowsAsync = async (method, errorMessage) => {
+    let error = null
+    try {
+      await method()
+    }
+    catch (err) {
+      error = err
+    }
+    expect(error).to.be.an('Error')
+    if (errorMessage) {
+      expect(error.message).to.equal(errorMessage)
+    }
+  }
 
 
-
-
-describe("requiredChecker",()=>{
+describe("requiredChecker", async ()=>{
     const checker = new requiredChecker();
    
  
  
  
 
-    context("check()",()=>{
+    context("check()", async ()=>{
         //arrange
         const json_body={
             name:"James"
         }; 
         let param;  
 
-        it("should throw error when json_body is undefined",()=>{
+        it("should throw error when json_body is undefined", async ()=>{
             //arrage
             //act 
             //assert
-            let fn = ()=>{
-                checker.check(undefined,param);
+            let fn = async()=>{
+                await checker.check(undefined,param);
             }
  
-            expect(fn).to.throw('json_object is undefined');
+            expectThrowsAsync(fn,'json_object is undefined');
         });
-        it("should throw error when param is undefined",()=>{
+        it("should throw error when param is undefined", async ()=>{
             //arrage
             //act 
             //assert
-            let fn = ()=>{
-                checker.check(json_body,undefined);
+            let fn = async()=>{
+                await checker.check(json_body,undefined);
             }
  
-            expect(fn).to.throw('param is undefined');
+            expectThrowsAsync(fn,'param is undefined');
         });
-        it("Should return false when required field not available",()=>{
+        it("Should return false when required field not available", async ()=>{
            param = { 
                 name:"notavail"
             };
             //act 
-            let ret = checker.check(json_body,param); 
+            let ret = await checker.check(json_body,param); 
  
             //assert
             expect(ret).to.be.false;
         });
 
-        it("Should return true when required field available",()=>{
+        it("Should return true when required field available", async ()=>{
            param = {
                 required:true,
                 name:"name"
             };
             //act 
-            let ret = checker.check(json_body,param); 
+            let ret = await checker.check(json_body,param); 
  
             //assert
             expect(ret).to.be.true;
@@ -68,8 +81,8 @@ describe("requiredChecker",()=>{
 
            
     });
-    context("error()",()=>{
-        it("should return error text",()=>{
+    context("error()", async ()=>{
+        it("should return error text", async ()=>{
             let param = {
                 name:"first_name"
             };
@@ -98,78 +111,77 @@ describe("requiredChecker",()=>{
 
 
 
-describe("availabilityChecker",()=>{
+describe("availabilityChecker", async ()=>{
     const checker = new AvailabilityChecker();
    
  
  
  
 
-    context("check()",()=>{
+    context("check()", async ()=>{
         //arrange
         const json_body={
             name:"James"
         }; 
         let param;  
 
-        it("should throw error when json_body is undefined",()=>{
+        it("should throw error when json_body is undefined", async ()=>{
             //arrage
             //act 
             //assert
-            let fn = ()=>{
-                checker.check(undefined,param);
+            let fn = async()=>{
+                await checker.check(undefined,param);
             }
- 
-            expect(fn).to.throw('json_object is undefined');
+            expectThrowsAsync(fn,'json_object is undefined'); 
         });
-        it("should throw error when param is undefined",()=>{
+        it("should throw error when param is undefined", async ()=>{
             //arrage
             //act 
             //assert
-            let fn = ()=>{
-                checker.check(json_body,undefined);
+            let fn = async ()=>{
+                await checker.check(json_body,undefined);
             }
  
-            expect(fn).to.throw('param is undefined');
+            expectThrowsAsync(fn,'param is undefined');
         });
  
-        it("Should return false when field is empty",()=>{
+        it("Should return false when field is empty", async ()=>{
             param = {
                  required:true,
                  name:""
              };
              //act 
-             let fn = ()=>{
-                checker.check(json_body,param);
+             let fn = async ()=>{
+                await checker.check(json_body,param);
             }
  
-            expect(fn).to.throw('name is undefined');
+            expectThrowsAsync(fn,'name is undefined');
          });
-        it("Should return true when field is available",()=>{
+        it("Should return true when field is available", async ()=>{
            param = {
                 required:true,
                 name:"name"
             };
             //act 
-            let ret = checker.check(json_body,param); 
+            let ret = await checker.check(json_body,param); 
  
             //assert
             expect(ret).to.be.true;
         });
-        it("Should return false when field is not available",()=>{
+        it("Should return false when field is not available", async ()=>{
             param = {
                  required:true,
                  name:"unavailable_name"
              };
              //act 
-             let ret = checker.check(json_body,param); 
+             let ret = await checker.check(json_body,param); 
   
              //assert
              expect(ret).to.be.false;
          });
     });
-    context("error()",()=>{
-        it("should return error text",()=>{
+    context("error()", async ()=>{
+        it("should return error text", async ()=>{
             let param = {
                 name:"first_name"
             };
@@ -178,7 +190,7 @@ describe("availabilityChecker",()=>{
             //assert
             expect(err).to.equal("first_name is not available.");
         });
-        it("should return error text",()=>{
+        it("should return error text", async ()=>{
             let param = {
                 name:""
             };
@@ -191,43 +203,43 @@ describe("availabilityChecker",()=>{
 
 }); 
 
-describe("regexChecker",()=>{
+describe("regexChecker", async ()=>{
     const checker = new RegexChecker();
    
  
  
  
 
-    context("check()",()=>{
+    context("check()", async ()=>{
         //arrange
         let json_body={
             name:"James"
         };  
 
-        it("should throw error when json_body is undefined",()=>{
+        it("should throw error when json_body is undefined", async ()=>{
             //arrage
             //act 
             //assert
             const param={
                 name:"name"
             }
-            let fn = ()=>{
-                checker.check(undefined,param);
+            let fn = async()=>{
+                await checker.check(undefined,param);
             }
  
-            expect(fn).to.throw('json_object is undefined');
+            expectThrowsAsync(fn,'json_object is undefined');
         });
-        it("should throw error when param is undefined",()=>{
+        it("should throw error when param is undefined", async ()=>{
             //arrage
             //act 
             //assert
-            let fn = ()=>{
-                checker.check(json_body,undefined);
+            let fn = async()=>{
+                await checker.check(json_body,undefined);
             }
  
-            expect(fn).to.throw('param is undefined');
+            expectThrowsAsync(fn,'param is undefined');
         });
-        it("should return true when param.regex is undefined",()=>{
+        it("should return true when param.regex is undefined", async ()=>{
             //arrage
             const param = {
                 name:"name",
@@ -236,13 +248,13 @@ describe("regexChecker",()=>{
             //act 
             //assert
             //act 
-            let ret = checker.check(json_body,param); 
+            let ret = await checker.check(json_body,param); 
  
             //assert
             expect(ret).to.be.true;
         });
 
-        it("Should return true when regular expression is valid",()=>{
+        it("Should return true when regular expression is valid", async ()=>{
            const param = {
                 required:true,
                 name:"country",
@@ -254,12 +266,12 @@ describe("regexChecker",()=>{
                 country:"Canada"
             };  
             //act 
-            let ret = checker.check(body,param); 
+            let ret = await checker.check(body,param); 
  
             //assert
             expect(ret).to.be.true;
         });
-        it("Should return false when regular expression is invalid",()=>{
+        it("Should return false when regular expression is invalid", async ()=>{
             const param = {
                 required:true,
                 name:"country",
@@ -271,14 +283,14 @@ describe("regexChecker",()=>{
                 country:"Denmark"
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret).to.be.false;
          });
     });
-    context("error()",()=>{
-        it("should return error text",()=>{
+    context("error()", async ()=>{
+        it("should return error text", async ()=>{
             const param = {
                 name:"first_name"
             };
@@ -306,12 +318,12 @@ describe("regexChecker",()=>{
 
 });
 
-describe('paramsChecker',()=>{
+describe('paramsChecker', async ()=>{
 
     const checker = new ParamsChecker();
-    context('check()',()=>{
+    context('check()', async ()=>{
 
-        it("Should return true when params is not null and is set to OBJECT",()=>{
+        it("Should return true when params is not null and is set to OBJECT", async ()=>{
             let param = {
                 required:true,
                 name:"friends",
@@ -326,7 +338,7 @@ describe('paramsChecker',()=>{
                 }
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret).to.be.true;
@@ -335,11 +347,11 @@ describe('paramsChecker',()=>{
              //arrange
              param.type=undefined;
              //act 
-             ret = checker.check(body,param);
+             ret = await checker.check(body,param);
              //assert
              expect(ret).to.be.true; 
         });
-        it("Should return false when params is not null and is not set to OBJECT",()=>{ 
+        it("Should return false when params is not null and is not set to OBJECT", async ()=>{ 
             //arrange
             let param = {
                 required:true,
@@ -364,7 +376,7 @@ describe('paramsChecker',()=>{
                 cars:["lambo","ford"]
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret,"param is defined but type is set to STRING").to.be.false;
@@ -373,7 +385,7 @@ describe('paramsChecker',()=>{
              param.type="PHONE";
              param.name = "phone"; 
              //act 
-             ret = checker.check(body,param);  
+             ret = await checker.check(body,param);  
              //assert
              expect(ret,"param is defined but type is set to PHONE").to.be.false;
 
@@ -382,7 +394,7 @@ describe('paramsChecker',()=>{
             param.type="ARRAY";
             param.name = "cars"; 
             //act 
-            ret = checker.check(body,param);  
+            ret = await checker.check(body,param);  
             //assert
             expect(ret,"param is defined but type is set to ARRAY").to.be.false;
 
@@ -391,7 +403,7 @@ describe('paramsChecker',()=>{
             param.type="DATE";
             param.name = "date_of_birth"; 
             //act 
-            ret = checker.check(body,param);  
+            ret = await checker.check(body,param);  
             //assert
             expect(ret,"param is defined but type is set to DATE").to.be.false;
 
@@ -400,13 +412,13 @@ describe('paramsChecker',()=>{
             param.type="NUMBER";
             param.name = "age"; 
             //act 
-            ret = checker.check(body,param);  
+            ret = await checker.check(body,param);  
             //assert
             expect(ret,"param is defined but type is set to NUMBER").to.be.false;
 
 
         });
-        it("Should return true when params is null",()=>{ 
+        it("Should return true when params is null", async ()=>{ 
             //arrange
             let param = {
                 required:true,
@@ -425,7 +437,7 @@ describe('paramsChecker',()=>{
                 cars:["lambo","ford"]
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret,"param is not defined. it should disregard type and return true").to.be.true;
@@ -433,8 +445,8 @@ describe('paramsChecker',()=>{
         });
 
     });
-    context("error()",()=>{
-        it("should return error text",()=>{
+    context("error()", async ()=>{
+        it("should return error text", async ()=>{
             let param = {
                 name:"first_name",
                 type:"NUMBER"
@@ -452,43 +464,43 @@ describe('paramsChecker',()=>{
     });
 });
 
-describe("typeChecker",()=>{
+describe("typeChecker", async ()=>{
     const checker = new TypeChecker();
    
  
  
  
 
-    context("check()",()=>{
+    context("check()", async ()=>{
         //arrange
         let json_body={
             name:"James"
         };  
 
-        it("should throw error when json_body is undefined",()=>{
+        it("should throw error when json_body is undefined", async ()=>{
             //arrage
             //act 
             //assert
             const param={
                 name:"name"
             }
-            let fn = ()=>{
-                checker.check(undefined,param);
+            let fn = async()=>{
+                await checker.check(undefined,param);
             }
  
-            expect(fn).to.throw('json_object is undefined');
+            expectThrowsAsync(fn,'json_object is undefined');
         });
-        it("should throw error when param is undefined",()=>{
+        it("should throw error when param is undefined", async ()=>{
             //arrage
             //act 
             //assert
-            let fn = ()=>{
-                checker.check(json_body,undefined);
+            let fn = async()=>{
+                await checker.check(json_body,undefined);
             }
  
-            expect(fn).to.throw('param is undefined');
+            expectThrowsAsync(fn,'param is undefined');
         });
-        it("should return true when param.type is undefined",()=>{
+        it("should return true when param.type is undefined", async ()=>{
             //arrage
             const param = {
                 name:"name",
@@ -497,7 +509,7 @@ describe("typeChecker",()=>{
             //act 
             //assert
             //act 
-            let ret = checker.check(json_body,param); 
+            let ret = await checker.check(json_body,param); 
  
             //assert
             expect(ret).to.be.true;
@@ -507,7 +519,7 @@ describe("typeChecker",()=>{
         /**
          * NUMBER 
          */
-        it("Should return true when type is number and is set to NUMBER",()=>{
+        it("Should return true when type is number and is set to NUMBER", async ()=>{
            const param = {
                 required:true,
                 name:"age",
@@ -520,12 +532,12 @@ describe("typeChecker",()=>{
                 age:152
             };  
             //act 
-            let ret = checker.check(body,param); 
+            let ret = await checker.check(body,param); 
  
             //assert
             expect(ret).to.be.true;
         });
-        it("Should return true when type is a decimal number and is set to NUMBER",()=>{
+        it("Should return true when type is a decimal number and is set to NUMBER", async ()=>{
             const param = {
                 required:true,
                 name:"amount",
@@ -537,12 +549,12 @@ describe("typeChecker",()=>{
                 amount:100.2
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret).to.be.true;
         });
-        it("Should return false when typtruee is null number and is set to NUMBER",()=>{
+        it("Should return false when typtruee is null number and is set to NUMBER", async ()=>{
             const param = {
                 required:true,
                 name:"date",
@@ -554,7 +566,7 @@ describe("typeChecker",()=>{
                 date:null
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret).to.be.false;
@@ -564,7 +576,7 @@ describe("typeChecker",()=>{
          /**
          * OBJECT 
          */
-        it("Should return true when type is an object and is set to OBJECT",()=>{
+        it("Should return true when type is an object and is set to OBJECT", async ()=>{
             const param = {
                  required:true,
                  name:"card",
@@ -579,12 +591,12 @@ describe("typeChecker",()=>{
                  age:152
              };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret).to.be.true;
          });
-         it("Should return false when type is an array and is set to OBJECT",()=>{
+         it("Should return false when type is an array and is set to OBJECT", async ()=>{
              const param = {
                  required:true,
                  name:"books",
@@ -596,12 +608,12 @@ describe("typeChecker",()=>{
                  books:[{}]
              };  
               //act 
-              let ret = checker.check(body,param); 
+              let ret = await checker.check(body,param); 
    
               //assert
               expect(ret).to.be.false;
          });
-         it("Should return false when type is a string and is set to OBJECT",()=>{
+         it("Should return false when type is a string and is set to OBJECT", async ()=>{
             const param = {
                 required:true,
                 name:"books",
@@ -613,12 +625,12 @@ describe("typeChecker",()=>{
                 books:"a jungle"
             };  
              //act 
-             let ret = checker.check(body,param); 
+             let ret = await checker.check(body,param); 
   
              //assert
              expect(ret).to.be.false;
         });
-         it("Should return true when type is null   and is set to OBJECT",()=>{
+         it("Should return true when type is null   and is set to OBJECT", async ()=>{
              const param = {
                  required:true,
                  name:"date",
@@ -630,7 +642,7 @@ describe("typeChecker",()=>{
                  date:null
              };  
               //act 
-              let ret = checker.check(body,param); 
+              let ret = await checker.check(body,param); 
    
               //assert
               expect(ret).to.be.true;
@@ -639,7 +651,7 @@ describe("typeChecker",()=>{
          /**
          * PHONE 
          */
-        it("Should return true when type is a phone number and is set to PHONE",()=>{
+        it("Should return true when type is a phone number and is set to PHONE", async ()=>{
             const param = {
                  required:true,
                  name:"phone",
@@ -651,7 +663,7 @@ describe("typeChecker",()=>{
                  phone:'+14164837744'
              };  
             //act 
-            let ret = checker.check(body,param); 
+            let ret = await checker.check(body,param); 
   
              //assert
              expect(ret,'usa/canada').to.be.true;
@@ -662,7 +674,7 @@ describe("typeChecker",()=>{
                 phone:'+4402032500145'
             };  
             //act 
-            ret = checker.check(body,param); 
+            ret = await checker.check(body,param); 
 
             //assert
             expect(ret,"uk").to.be.true;
@@ -673,14 +685,14 @@ describe("typeChecker",()=>{
                 phone:'+989128839009'
             };  
             //act 
-            ret = checker.check(body,param); 
+            ret = await checker.check(body,param); 
 
             //assert 
             expect(ret,'Iran').to.be.true;
          });
  
 
-         it("Should return true when type is an invalid phone number and is set to PHONE",()=>{
+         it("Should return true when type is an invalid phone number and is set to PHONE", async ()=>{
             const param = {
                  required:true,
                  name:"phone",
@@ -692,7 +704,7 @@ describe("typeChecker",()=>{
                  phone:'4164837744'
              };  
             //act 
-            let ret = checker.check(body,param); 
+            let ret = await checker.check(body,param); 
   
              //assert
              expect(ret,'no + sign').to.be.false;
@@ -703,7 +715,7 @@ describe("typeChecker",()=>{
                 phone:'+44 (0)203 250 0145'
             };  
             //act 
-            ret = checker.check(body,param); 
+            ret = await checker.check(body,param); 
 
             //assert
             expect(ret,"with plus sign but with spaces and brackets").to.be.false;
@@ -714,7 +726,7 @@ describe("typeChecker",()=>{
                 phone:'(416) 238-2393'
             };  
             //act 
-            ret = checker.check(body,param); 
+            ret = await checker.check(body,param); 
 
             //assert 
             expect(ret,'no plus sign with brackets').to.be.false;
@@ -725,15 +737,15 @@ describe("typeChecker",()=>{
                 phone:'4162382393'
             };  
             //act 
-            ret = checker.check(body,param); 
+            ret = await checker.check(body,param); 
 
             //assert 
             expect(ret,'no plus sign and no country code').to.be.false;
          });
  
     });
-    context("error()",()=>{
-        it("should return error text",()=>{
+    context("error()", async ()=>{
+        it("should return error text", async ()=>{
             const param = {
                 name:"first_name",
                 type:"NUMBER"
@@ -747,4 +759,35 @@ describe("typeChecker",()=>{
 
 });
 
+
+describe('dynamicChecker',()=>{
+    const checker = new DynamicChecker();
+    context('check()',()=>{
+        it('Should return true after fetching data',async ()=>{
+            
+            let json ={
+                handle:"bahram-ghahari",
+                min_repos:5
+            }
+            let fn = async (body:any)=>{
+
+                        const axios = require('axios').default;
+                        const json = await axios.get(`https://api.github.com/users/${body.handle}`);  
+                        let claimed_repos = +body.min_repos;
+                        let public_repos = +json.data.public_repos;
+                        let success = claimed_repos<public_repos;
+                        
+                        return {success };
+                    };
+            let params= {   
+                    name:"repos",
+                    dynamicValidation:fn
+                } ;
+
+
+            let res = await checker.check(json,params);
+            expect(res).to.be.true;
+        });
+    });
+});
  
