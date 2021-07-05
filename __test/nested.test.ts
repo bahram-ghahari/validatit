@@ -224,4 +224,115 @@ describe("requiredChecker for a nested object",()=>{
 
 });
 
+
+describe("simplified version",()=>{
+    context("required",()=>{
+        it("should mark it as required if name has a * at the beginning",async ()=>{
+            let json = {
+                first_name:"jamie",
+                last_name:"Holmes",
+                address:{
+                    street:""
+                }
+            };
+            let params=[
+                {name:"*first_name"},
+                {name:"*last_name"},
+                {name:"*address"},
+
+            ];
+            let res = await validatit(json,params);
+
+            expect(res.success).to.be.true;
+
+
+            let json2 = {
+                first_name:"jamie",
+                last_name:"Holmes" 
+            }; 
+            res = await validatit(json2,params);
+
+            expect(res.success).to.be.false;
+        })
+    });
+
+    context("type",()=>{
+        it("should check type if there is a name:type format",async ()=>{
+            let json = {
+                first_name:"jamie",
+                phone:"+18889203388",
+                address:{
+                    street:""
+                }
+            };
+            let params=[
+                {name:"first_name:STRING"},
+                {name:"phone:PHONE"} 
+
+            ];
+            let res = await validatit(json,params);
+
+            expect(res.success).to.be.true;
+
+
+            let json2 = {
+                first_name:"jamie",
+                phone:"na" 
+            }; 
+            res = await validatit(json2,params);
+
+            expect(res.success).to.be.false;
+
+
+            params=[
+                {name:"first_name:STRING:NUMBER"},
+                {name:"phone:PHONE:"} 
+
+            ];
+            res = await validatit(json,params);
+
+            expect(res.success).to.be.true;
+
+ 
+        })
+    });
+
+    context("combination",()=>{
+        it("should check type and regired if there is a *name:type format",async ()=>{
+            let json = {
+                first_name:"jamie",
+                phone:"+18889203388",
+                address:{
+                    street:""
+                }
+            };
+            let params=[
+                {name:"*first_name:STRING"},
+                {name:"*phone:PHONE"} 
+
+            ];
+            let res = await validatit(json,params);
+
+            expect(res.success).to.be.true;
+
+            params=[
+                {name:"*first_name:STRING"},
+                {name:"*phone:PHONE"} ,
+                {name:"*last_name"} 
+            ];
+            res = await validatit(json,params); 
+            expect(res.success).to.be.false; 
+
+
+            params=[
+                {name:"*first_name:NUMBER"},
+                {name:"*phone:PHONE"}  
+            ];
+            res = await validatit(json,params);
+
+            expect(res.success).to.be.false;
+ 
+        })
+    });
+});
  

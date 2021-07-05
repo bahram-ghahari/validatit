@@ -81,6 +81,22 @@ async function validateField(json_object:any, p:JSONParam,path:string):Promise <
     }
     const errors:paramErrorManager = new paramErrorManager(); 
 
+    if(p.name!==undefined){
+        if(p.name.startsWith('*')){
+            p.name = p.name.substring(1);
+            p.required=true;
+
+        }
+        if(p.name.indexOf(":")!==-1)//has type
+        {
+            const arr_name = p.name.split(":");
+            p.type = arr_name[1];
+            p.name=arr_name[0];
+        }
+    }
+    console.log(JSON.stringify(p));
+    
+
 
     const required_checker = new requiredChecker();
     const availability_checker = new AvailabilityChecker();
