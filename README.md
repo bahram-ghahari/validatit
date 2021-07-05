@@ -57,6 +57,19 @@ let res = await validatit(json,params);
 ```
 
 
+## Params
+
+Parameter name | description | example | notes
+--- | --- | ---  | ---
+name | name of the parameter to ve validated | name:"first_name"  | 
+required | indicates that the parameter is mandatory | {name:"first_name" ,required:true} | you can use {name:"*first_name"} instead to have smaller validators
+type | parameter type. Current types are :ARRAY, OBJECT, BOOLEAN, STRING, NUMBER, FUNCTION, DATE, CREDIT_CARD, EMAIL, PHONE, ANY | {name:"first_name" ,type:"STRING"} | you can use {name:"first_name:STRING"} instead to have smaller validators
+ pattern | custom regular expression | {name:"first_name",pattern:/^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/}  | 
+ dynamicValidation | used for custom runtime validations | {name:"first_name",dynamicValidation:asyc(body)=>return {success:true,error_message:""}}  |  
+ 
+
+
+
 ## Run tests
 
 ```sh

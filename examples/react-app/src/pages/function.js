@@ -25,7 +25,7 @@ export default function FunctionPage() {
         {
           name:"a",
           type:"NUMBER",
-          dynamicValidation:function(body){
+          dynamicValidation:async function(body){
             let success = true;
             let error_message = "";
             const a = +body.a;
@@ -41,7 +41,7 @@ export default function FunctionPage() {
         {
           name:"b",
           type:"NUMBER",
-          dynamicValidation:function(body){
+          dynamicValidation:async function(body){
             let success = true;
             let error_message = "";
             const a = +body.a;
@@ -57,7 +57,7 @@ export default function FunctionPage() {
         {
           name:"c",
           type:"NUMBER",
-          dynamicValidation:function(body){
+          dynamicValidation:async function(body){
             let success = true;
             let error_message = "";
             const a = +body.a;
@@ -77,45 +77,25 @@ export default function FunctionPage() {
     const example2 = { 
       json_object:  
         {
-          github_id:"bahram-ghahari",
-          repos:100 
+          github_handle:"bahram-ghahari",
+          minimum_repos:100 
         } ,
       params: 
-      [
-        {
-          name:"github_id",
-          type:"STRING" 
-        },
-        {
+      [  
+        {   
           name:"repos",
-          type:"NUMBER",
-          dynamicValidation:function(body){
-            let success = true;
-            let error_message = ""; 
-            let repos = +body.repos;
+          dynamicValidation:async (body)=>{
 
+            const axios = require('axios').default;
+            const json = await axios.get(`https://api.github.com/users/${body.github_handle}`);  
+            let claimed_repos = +body.minimum_repos;
+            let public_repos = +json.data.public_repos;
+            let success = claimed_repos<public_repos;
             
-
-            return {success,error_message};
-          }
-        },
-        {
-          name:"c",
-          type:"NUMBER",
-          dynamicValidation:function(body){
-            let success = true;
-            let error_message = "";
-            const a = +body.a;
-            const b = +body.b; 
-            const c = +body.c;
-
-            success = !(a + b <= c || a + c <= b || b + c <= a);
-            if(!success)error_message="this is an invalid triangle";
-
-            return {success,error_message};
-          }
-        } 
-      ]
+            return {success , error_message:`${body.github_handle} has only ${public_repos} which is less than ${claimed_repos}` };
+        }
+      }
+    ]
     };
     const [example2_state , setExample2State] = React.useState({json_object:example2.json_object , params:example2.params}); 
     const Example2Callback = (cb_data)=>setExample2State(cb_data);
@@ -149,6 +129,13 @@ export default function FunctionPage() {
           data = {example1_state} 
           cb = {Example1Callback}
           title = 'provided Json object is valid. (this is an actual trangle)'
+        />
+
+
+        <ValidationCard 
+          data = {example2_state} 
+          cb = {Example2Callback}
+          title = 'second example '
         />
  
  
