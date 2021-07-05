@@ -24,11 +24,38 @@
 npm i validatit@latest
 ```
 
+
 ## Usage
 
-```sh
-npm run start
+```node
+import {validatit} from 'validatit'
 ```
+
+Call validatit function
+
+```node
+let json = {
+    first_name:"jamie",
+    phone:"+18889203388",
+    address:{
+        street:""
+    }
+};
+let params=[
+    {name:"*first_name:STRING"},
+    {name:"*phone:PHONE"} ,
+    {
+    name:"address",
+    params:[
+      {name:"*street"}
+    ]
+    }
+
+];
+let res = await validatit(json,params);
+
+```
+
 
 ## Run tests
 

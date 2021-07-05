@@ -93,9 +93,7 @@ async function validateField(json_object:any, p:JSONParam,path:string):Promise <
             p.type = arr_name[1];
             p.name=arr_name[0];
         }
-    }
-    console.log(JSON.stringify(p));
-    
+    } 
 
 
     const required_checker = new requiredChecker();

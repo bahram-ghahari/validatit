@@ -77,40 +77,24 @@ export default function FunctionPage() {
     const example2 = { 
       json_object:  
         {
-          a:1,
-          b:1,
-          c:1 
+          github_id:"bahram-ghahari",
+          repos:100 
         } ,
       params: 
       [
         {
-          name:"a",
-          type:"NUMBER",
-          dynamicValidation:function(body){
-            let success = true;
-            let error_message = "";
-            const a = +body.a;
-            const b = +body.b; 
-            const c = +body.c;
-
-            success = !(a + b <= c || a + c <= b || b + c <= a);
-            if(!success)error_message="this is an invalid triangle";
-
-            return {success,error_message};
-          }
+          name:"github_id",
+          type:"STRING" 
         },
         {
-          name:"b",
+          name:"repos",
           type:"NUMBER",
           dynamicValidation:function(body){
             let success = true;
-            let error_message = "";
-            const a = +body.a;
-            const b = +body.b; 
-            const c = +body.c;
+            let error_message = ""; 
+            let repos = +body.repos;
 
-            success = !(a + b <= c || a + c <= b || b + c <= a);
-            if(!success)error_message="this is an invalid triangle";
+            
 
             return {success,error_message};
           }

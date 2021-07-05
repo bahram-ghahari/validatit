@@ -9,7 +9,7 @@ export interface IChecker{
      * @param {json_object} any object to validate
      * @param {param} JSONParam parameter validator 
      */
-    check(json_object:any, param:JSONParam):boolean;
+    check(json_object:any, param:JSONParam): boolean ;
 
     /**
      * Summary. Provide custom errr message for failed validations

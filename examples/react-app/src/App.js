@@ -20,6 +20,8 @@ import FunctionPage from './pages/function';
 import PatternPage from './pages/pattern';
 import { ListItemText } from '@material-ui/core';
 import NestedPage from './pages/nested';
+import NamePage from './pages/name';
+
 
 
 const drawerWidth = 240;
@@ -168,6 +170,7 @@ export default function PersistentDrawerLeft() {
           [classes.contentShift]: open,
         })}
       > 
+        <div id="name"><NamePage /></div> 
         <div id="required"><RequiredPage /></div>
         <div id="type"><TypePage /></div>
         <div id="pattern"><PatternPage /></div> 

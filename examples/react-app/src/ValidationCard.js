@@ -54,9 +54,9 @@ export default function ValidationCard(props) {
 
 
 
-  const validate = (event) => {  
+  const validate = async (event) => {  
     try{
-      const _result = validatit(props.data.json_object,props.data.params);  
+      const _result = await validatit(props.data.json_object,props.data.params);  
       setResult(_result);
     }catch{
       setResult({
