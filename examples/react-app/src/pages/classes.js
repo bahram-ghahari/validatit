@@ -17,6 +17,13 @@ export const pageClasses = (theme)=>{
       paddingTop:theme.spacing(2),
       fontSize:".85rem"
     }
+    , 
+    code: { 
+      color:"#374184",
+      background:'#fff', 
+      fontSize:"1rem",
+      fontWeight:"bold"
+    }
   };
 
 }

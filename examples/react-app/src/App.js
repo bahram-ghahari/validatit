@@ -19,6 +19,7 @@ import TypePage from './pages/type';
 import FunctionPage from './pages/function';
 import PatternPage from './pages/pattern';
 import { ListItemText } from '@material-ui/core';
+import NestedPage from './pages/nested';
 
 
 const drawerWidth = 240;
@@ -91,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
 export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -105,7 +106,9 @@ export default function PersistentDrawerLeft() {
     {text:"Required" , id:"required" },
     {text:"Type" , id:"type" },
     {text:"Pattern" , id:"pattern" },
-    {text:"Function" , id:"function" }
+    {text:"Dynamic Validation" , id:"function" },
+    {text:"Nested Objects" , id:"nested" },
+
 
   ];
   return (
@@ -169,6 +172,8 @@ export default function PersistentDrawerLeft() {
         <div id="type"><TypePage /></div>
         <div id="pattern"><PatternPage /></div> 
         <div id="function"><FunctionPage /></div>
+        <div id="nested"><NestedPage /></div>
+
  
       </main>
     </div>

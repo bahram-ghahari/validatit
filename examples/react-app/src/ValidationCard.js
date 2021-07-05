@@ -20,15 +20,19 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.text.secondary,
     background:"#000000d9",
     margin: theme.spacing(10)
-  },
-  title: {
-    background:"#000000d9"
-  },
+  }, 
   groupTitle: {
     background:"#416141",
     color:"#fff",
     paddingLeft:theme.spacing(1),
     fontSize:"12px"
+  },
+  title: { 
+    color:"#fff",
+    paddingLeft:theme.spacing(1),
+    fontSize:".85rem",
+    fontWeight:"bold",
+    fontStyle:"italic"
   }
 }));
 
@@ -42,17 +46,17 @@ export default function ValidationCard(props) {
   const handleParamChange = (obj) => {
     props.cb({json_object: props.data.json_object  , params:obj.updated_src});
 
-  };
-
-
+  }; 
 
   const [result, setResult] = React.useState({});
+
+ 
 
 
 
   const validate = (event) => {  
     try{
-      const _result = validatit(props.json_object,props.params);  
+      const _result = validatit(props.data.json_object,props.data.params);  
       setResult(_result);
     }catch{
       setResult({
@@ -64,8 +68,10 @@ export default function ValidationCard(props) {
 
       <Paper className={classes.paper}>
         <Grid container  spacing={3}>
-         
-          <Grid item xs={6} alignContent="left">
+          <Grid item xs={12} alignContent="left">
+            <Typography className={classes.title}>{props.title}</Typography>
+          </Grid>
+          <Grid item  xs={12} sm={6} alignContent="left">
             <Typography  className={classes.groupTitle}>
               json object
             </Typography>
@@ -77,7 +83,7 @@ export default function ValidationCard(props) {
               theme="monokai" 
             />
           </Grid>
-          <Grid item xs={6} alignContent="left">
+          <Grid item xs={12} sm={6} alignContent="left">
             <Typography  className={classes.groupTitle}>
               params
             </Typography>
