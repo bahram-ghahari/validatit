@@ -27,17 +27,17 @@ import { ValidationResult } from "./ValidationResult";
  * 
  * @see JSONParam object
  */
-export function validate(json_object:any , validation_params:JSONParam[]) { 
+export async  function validate(json_object:any , validation_params:JSONParam[]) { 
    
     //check root
-    const result = validatePath(json_object,validation_params,'');  
+    const result = await validatePath(json_object,validation_params,'');  
  
     return result;
  
 }
  
  
-function  validatePath(json_object:any , validation_params:JSONParam[],path:string=""):ValidationResult{
+async function   validatePath(json_object:any , validation_params:JSONParam[],path:string=""):Promise<ValidationResult>{
 
     const result: ValidationResult={
         success:true,
@@ -50,7 +50,7 @@ function  validatePath(json_object:any , validation_params:JSONParam[],path:stri
 
 
         //validate each parameter 
-        let field_check_result = validateField(json_object,p,path);  
+        let field_check_result = await validateField(json_object,p,path);  
          
         field_check_result.error.forEach(err=>errors.addParamError(err));
         result.success = result.success && field_check_result.success; 
@@ -62,7 +62,7 @@ function  validatePath(json_object:any , validation_params:JSONParam[],path:stri
                 
                 //for example: address.[children_parameter]
                 path +=`${p.name}.`;
-                const internal_result = validatePath(json_object[`${p.name}`],p.params,path);
+                const internal_result = await validatePath(json_object[`${p.name}`],p.params,path);
                 result.success = result.success && internal_result.success; 
                 internal_result.error.forEach(e=>errors.addParamError(e));
             }
@@ -73,7 +73,7 @@ function  validatePath(json_object:any , validation_params:JSONParam[],path:stri
       
     return result;
 }
-function validateField(json_object:any, p:JSONParam,path:string):ValidationResult{
+async function validateField(json_object:any, p:JSONParam,path:string):Promise <ValidationResult>{
  
     const result: ValidationResult={
         success:true,

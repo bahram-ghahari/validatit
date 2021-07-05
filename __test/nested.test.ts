@@ -9,7 +9,7 @@ describe("requiredChecker for a nested object",()=>{
  
  
 
-    context("validate()",()=>{
+    context("validate()",async ()=>{
         //arrange
         const json_body={
             first_name:"James" ,
@@ -22,7 +22,7 @@ describe("requiredChecker for a nested object",()=>{
         let param:JSONParam[];  
 
  
-        it("Should return true when required is enabled ",()=>{
+        it("Should return true when required is enabled ",async ()=>{
            param =  [{
                 name:"school",
                 required:true , 
@@ -44,12 +44,12 @@ describe("requiredChecker for a nested object",()=>{
                 ]
             }];
             //act 
-            let ret = validate(json_body,param); 
+            let ret =await validate(json_body,param); 
             
             //assert
             expect(ret.success).to.be.true;
         });
-        it("Should validate children when parent is not required but available ",()=>{
+        it("Should validate children when parent is not required but available ",async ()=>{
             param =  [{
                  name:"school",
                  required:false , 
@@ -65,7 +65,7 @@ describe("requiredChecker for a nested object",()=>{
                  ]
              }];
              //act 
-             let ret = validate(json_body,param);  
+             let ret =await validate(json_body,param);  
              //assert
              //capacity is required but unavailable
              expect(ret.success).to.be.false;
@@ -74,7 +74,7 @@ describe("requiredChecker for a nested object",()=>{
 
 
              json_body.school["capacity"]=1200;
-             ret = validate(json_body,param);  
+             ret =await validate(json_body,param);  
              //assert
              //capacity is required and available
              expect(ret.success).to.be.true;
@@ -82,7 +82,7 @@ describe("requiredChecker for a nested object",()=>{
 
 
 
-         it("Should validate doubly nested objects",()=>{
+         it("Should validate doubly nested objects",async ()=>{
              json_body.school["principal"]={
                 first_name:"michael",
                 last_name:"allen" 
@@ -112,7 +112,7 @@ describe("requiredChecker for a nested object",()=>{
                  ]
              }];
              //act 
-             let ret = validate(json_body,param);  
+             let ret =await validate(json_body,param);  
              //assert
              //school.principal.last_name is required 
              expect(ret.success).to.be.true;
@@ -122,7 +122,7 @@ describe("requiredChecker for a nested object",()=>{
 
 
              json_body.school["capacity"]=1200;
-             ret = validate(json_body,param);  
+             ret =await validate(json_body,param);  
              //assert
              //school.principal.last_name is required but undefined
              expect(ret.success).to.be.false;
@@ -130,7 +130,7 @@ describe("requiredChecker for a nested object",()=>{
 
 
 
-         it("Should validate if parent object is not required",()=>{
+         it("Should validate if parent object is not required",async ()=>{
             let json_object= 
             {
                 first_name:"zig",
@@ -171,7 +171,7 @@ describe("requiredChecker for a nested object",()=>{
                 } 
             ];
             //act 
-            let ret = validate(json_object,params);  
+            let ret =await validate(json_object,params);  
             //assert
             //all fields are provided 
             expect(ret.success).to.be.true;
@@ -188,33 +188,33 @@ describe("requiredChecker for a nested object",()=>{
                 }
             } ;
  
-            ret = validate(json_object2,params);  
+            ret =await validate(json_object2,params);  
             //assert
             //address.street is required but undefined
             expect(ret.success).to.be.false;
 
             json_object.address=undefined;
  
-            ret = validate(json_object,params);  
+            ret =await validate(json_object,params);  
             //assert
             //address children are required but address itself is undefined
             expect(ret.success).to.be.true;
         });
 
-         it("Should return only 1 error after multiple executions",()=>{
+         it("Should return only 1 error after multiple executions",async ()=>{
  
            param =  [{
                 name:"city",
                 required: true 
             }]; 
             //act 
-            let ret = validatit(json_body,param);  
+            let ret = await validatit(json_body,param);  
             //assert
             //school.principal.last_name is required 
             expect(ret.error[0].error.length).to.eq(1);
  
 
-            ret = validatit(json_body,param);  
+            ret = await validatit(json_body,param);  
             //assert
             //school.principal.last_name is required 
             expect(ret.error[0].error.length).to.eq(1);
