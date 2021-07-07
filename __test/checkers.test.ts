@@ -759,7 +759,7 @@ describe("typeChecker", async ()=>{
 
 });
 
-
+declare var require: any;
 describe('dynamicChecker',()=>{
     const checker = new DynamicChecker();
     context('check()',()=>{
